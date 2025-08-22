@@ -37,27 +37,35 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Connected to the server. Type 'exit' to quit.\n";
 
+    // main loop
     while (true) {
         // get the command from the user
         std::string command;
-        std::cout << "Enter a command: ";
+        std::cout << "Enter a command (or 'quit' to exit): ";
         std::getline(std::cin, command);
 
-        if (send(sock, command.c_str(), command.size(), 0) < 0) {
+        if (command == "quit") {
+            break;
+        }
+
+        std::string message = "SYS " + command;
+        if (send(sock, message.c_str(), message.size(), 0) < 0) {
             perror("Send failed");
             break;
         }
 
-        // receive the output
+        // receive the output or the response from the server
         char buffer[4096];
-        int n = read(sock, buffer, sizeof(buffer) - 1);
-        if (n > 0) {
-            buffer[n] = '\0'; // null-terminate the received data
-            std::cout << "Received: " << buffer << std::endl;
-        } else {
-            perror("Receive failed");
-            break; // exit on receive failure
-        }
+        memset(buffer, 0, sizeof(buffer)); // clear the buffer
+        // here we then use recv to read the server's response
+        int bytes = recv(sock, buffer, sizeof(buffer) - 1, 0);
+        
+        if (bytes <= 0) {
+            std::cout << "Server closed connection\n";
+            break;
+        }        
+
+        std::cout << "Output:\n" << buffer << std::endl;
     }
 
     close(sock);
