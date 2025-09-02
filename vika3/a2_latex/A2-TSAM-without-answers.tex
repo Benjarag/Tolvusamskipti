@@ -1,0 +1,337 @@
+\documentclass[9pt, addpoints, answers]{exam}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{graphicx,lastpage}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{scrextend}
+\usepackage{mathrsfs}
+\usepackage{hhline}
+\usepackage{booktabs} % book-quality tables
+\usepackage{units}    % non-stacked fractions and better unit spacing
+\usepackage{multicol} % multiple column layout facilities
+\usepackage{lipsum}   % filler text
+\usepackage{varwidth} % centering for itemize
+\usepackage{listings}
+\usepackage[linewidth=1pt]{mdframed}
+
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+\qformat{\thequestion\dotfill \emph{\totalpoints\ points}}
+\pagestyle{headandfoot}
+\header{T-409-TSAM}{Assignment 2}{\thepage/\numpages}
+\runningheadrule
+\firstpagefooter{}{}{}
+\runningfooter{}{Page \thepage\ of \numpages}{}
+
+\graphicspath{{../}{Figures/}}
+\title{Assignment 1}
+
+\begin{document}
+\noindent
+\begin{minipage}[l]{.11\textwidth}%
+\noindent
+    \includegraphics[width=\textwidth]{HR}
+\end{minipage}%
+%\hfill
+\begin{minipage}[r]{.6\textwidth}%
+\begin{center}
+    {\large\bfseries Department of Computer Science \par
+    \large Computer Networks \\[2pt]
+    \large Due: Thursday 11th September {21.00}
+    }
+\end{center}
+\end{minipage}%
+\fbox{\begin{minipage}[l]{.4\textwidth}%
+\noindent
+    {\bfseries Your name:}\\[2pt]
+TA Name:    \\
+\end{minipage}}%
+
+\large     
+\vspace{2cm}
+\begin{center}
+    \begin{minipage}{40em}
+        \begin{center}
+            This is an individual assignment and should be submitted as a 
+            pdf using Canvas.  
+        \end{center}
+        
+        \vspace{6pt}
+    For those who like to dabble in the dark arts, the latex version 
+    is also available. You may submit in any legible form you wish.
+    
+        \vspace{6pt}
+    Marks are awarded for question difficulty. While there is 
+    typically a relationship between difficulty and length of answer,
+        it may not be a strong one. 
+
+        \vspace{6pt}
+        \textbf{Always show your calculations, 
+        and explain your reasoning, especially with open ended questions 
+        such as pricing, or design. For all questions involving ping
+        measurements, provide a screen shot of your results.}
+
+
+    \par
+    \vspace{12pt}
+    \end{minipage}
+\end{center}
+
+\vspace{4cm}
+\begin{center}
+    \gradetable[h]
+\end{center}
+\newpage
+\section*{Introduction}
+
+
+%%% Question 1
+\section*{Network Transport Times}
+\begin{questions}
+    \question
+\begin{parts}
+     \part[2]
+     {traceroute and ping are useful command line tools to show the
+              network path and latency to another host.  
+              
+    Using ping, find the average round trip time between Iceland and:
+    \begin{enumerate}{}
+        \item New York (198.211.103.209)
+        \item Tokyo (160.16.113.133)
+    \end{enumerate}
+    }
+    Provide a screen shot of your ping results.
+    \begin{solution}
+
+    \end{solution}
+
+    \part[4]
+    Solve the following problem using the times you found above.
+    A server  in Iceland is being used for a game of online bullet chess by two players, one in New York and one in Tokyo.
+    In bullet chess, each player has a limited time to make all their moves, in this case 1 minute each in total for all their moves.
+    Apart from the usual chess rules, a player looses when they run out of time to make their move.
+    Assuming both players take the same amount of time to make their moves locally, and neither is able to win or draw the game within their time limit, which player will win, and by how many seconds?
+    \begin{solution}
+
+    \end{solution}
+
+    \part[2] 
+     Using the ping command, what is the round trip time (RTT) to the
+     following hosts?
+     \begin{enumerate}
+            \item mel1.speedtest.telstra.net
+            \item per1.speedtest.telstra.net
+     \end{enumerate}
+
+    \begin{solution}
+
+    \end{solution}
+
+
+     \part[2]{Both the hosts are in Australia, mel1 is in Melbourne, perl1
+     is in Perth, and are usally connected by a fibre-optic cable. (We have
+     occasionally seen this link fall back on satellite in the past, in 
+     that case calculate the approximate orbital height of the satellite.) If 
+     the speed of light 
+     in a vacuum is ~300,000,000 m/s and the core index of refraction of 
+     fiber-optic cable in the Australian
+     backbone is 1.50, approximately how far is Perth from Melbourne?}
+    \begin{solution}
+
+    \end{solution}
+\end{parts}
+
+%%% Question 2
+\newpage
+     \section*{Network Throughput}
+  \question
+  \begin{parts}
+      \part[2]
+      \label{prob:2_a}
+      You need to transfer a geophysical dataset of 100TB stored on disk in Iceland to the Norwegian Metrology Office.
+        How long will it take to transfer this dataset to Norway assuming a 1Gbps connection, and 15\% protocol overhead?
+        \begin{solution}
+
+        \end{solution}
+
+      \vspace{8pt}
+      \par
+     \part[2]
+     \label{prob:2_b}
+      Ref: \url{https://en.wikipedia.org/wiki/Linear_Tape-Open}
+      \vspace{8pt}
+
+      
+
+      An industry standard tape (circa 2018) can hold 12TB of
+      data on a single cartridge.
+
+      Assuming a best case scenario of 3 hours ground transport time to
+      Keflavik airport and 1 hour from Oslo to destination company, with 
+      a scheduled flight time also of 3 hours. 
+      How much data do you need before it is quicker to send the data by 
+      tape than transfer it over the network? (Ignore time to read and write 
+      the tape.)
+
+        \begin{solution}
+
+        \end{solution}
+
+     \part[2] Tannenbaum in Computer Networks wisely advises never to overlook
+      the speed of sending data by existing transport networks - planes
+      in this case. However, his example overlooks the time taken to
+      create the tapes in the first place.
+
+      Assuming that the maximum writing and reading speed for a tape is
+      900(MB/s), how long does it actually take to transfer the data
+      to Norway including the time to read and write the tapes, and that 
+      you only have one tape reader/writer in each city?
+
+        \begin{solution}
+
+        \end{solution}
+
+      \part[1] What is the new break even amount for sending data by planes?
+
+        \begin{solution}
+
+        \end{solution}
+
+  \end{parts}
+
+%%% Question 3
+
+  \section*{Network Engineering}
+ \question
+   An ISP is statistically multiplexing its customers over 50Gbs links.
+   You have been asked to calculate how many customers it can afford to assign 
+   to each link, and maintain a reasonable level of service to each one.
+
+   Nominally, each customer is being sold a 1Gbps link.
+
+  \begin{parts}
+  \part[1]{If each customer is to be guaranteed access to 1Gbps at any time,
+      how many customers can the ISP provision per 50Gbps link.}
+
+        \begin{solution}
+
+        \end{solution}
+
+  \part[2]{Assume that the 50Gbps link costs the ISP 5,000,000 ISK/month,
+      and the ISP needs to make 25\% profit to cover all overheads.
+      What is the smallest number of customers that the ISP can provision 
+      for each 1Gbps link, and still meets its profit targets, if the 
+      ISP charges each customer 10,000ISK for their Internet service?
+  }
+        \begin{solution}
+
+        \end{solution}
+
+  \part[1]{What is the maximum speed each customer will be able to
+      download data at, assuming all the customers provisioned in (b) are 
+      maximising their network connection?}
+
+        \begin{solution}
+
+        \end{solution}
+
+  \part[2] The ISP decides that on average each business customer will use
+      their link 20\% of the time, evenly distributed over the day,
+      and that households will only use the Internet in the evenings,
+      and place less load on their connections.
+      Assuming this is correct, how many customers can the ISP now 
+      provision and still maintain the illusion that they have access
+      to 1Gbps each? 
+
+        \begin{solution}
+
+        \end{solution}
+
+ \end{parts}
+
+  \section*{Error Detection / Correction}
+ \question
+    
+  \begin{parts}
+  \part[1] Shortly explain the purpose of redundancy such as parity bits or Hamming codes in data transmission.
+        \begin{solution}
+
+        \end{solution}
+
+  \part[2]
+        Given the following sequence of data bits (in groups of 7), determine the even parity bit that should be added for error detection for each group.
+        
+        \begin{tabular}{l|l}
+            data & parity bit \\ \hline
+            1011001 & \\
+            1100001 & \\
+            0000000 & \\
+            1000001 &
+        \end{tabular}
+
+        \begin{solution}
+
+        \end{solution}
+
+  \part[2] For a transmissing you are using the Hamming(7,4) code from slides 33-36 in lecture 4. You receive the word 1110011 (4 data bits and 3 parity bits).
+    Identify if there is an error and locate the erroneous bit! What was the orginal data that was sent?
+        \begin{solution}
+
+        \end{solution}
+
+  \part[2] Can you be absolutely sure about the answer to the previous question? Explain!
+        \begin{solution}
+
+        \end{solution}
+
+    \end{parts}
+
+
+\section*{Protocol Overhead}
+ \question
+    Your company has introduced a new high-speed low-latency intra-office messaging system.
+    Internally, the system sends messages using UDP to the recipients desktop computer, 
+    all of which are connected via Ethernet to the same local network.
+    You fancy a colleague on the same office floor and send that colleague the message "Hi, how are you today?".
+
+  \begin{parts}
+  \part[2] Including protocol overhead, how many bytes are sent over Ethernet to deliver this message?
+        \begin{solution}
+
+        \end{solution}
+        
+
+  \part[1] What is the percentage of overhead in the total communication?
+        \begin{solution}
+
+        \end{solution}
+
+  \part[2] Suppose you wanted to minimize overhead in the communication, what is the optimal length of message to reduce the relative overhead?
+        \begin{solution}
+
+        \end{solution}
+
+  \part[1] What is the percentage of overhead in that case?
+        \begin{solution}
+
+        \end{solution}
+
+  \part[2] Suppose this is the first communication between your computer and the recipients computer since turning your computer on this morning.
+            What other packets need to be sent and received by your computer before it can send the actual message?
+        \begin{solution}
+
+        \end{solution}
+
+  \part[1] How much overhead do these extra packets add?
+        \begin{solution}
+
+        \end{solution}
+
+ \end{parts}
+
+\end{questions}
+\end{document}
