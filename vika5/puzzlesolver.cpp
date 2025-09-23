@@ -9,6 +9,8 @@
 #include <unistd.h>
 #include <random>
 #include <map>
+#include <netinet/ip.h>
+#include <netinet/udp.h>
 
 using namespace std;
 
@@ -35,6 +37,8 @@ bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& 
 string send_and_receive(int sock, const sockaddr_in& addr, const string& message, int timeout_sec = 2);
 int extract_port_from_response(const string& response);
 string identify_port_with_retry(const string& ip, int port, int max_retries = 3);
+bool probe_hidden_port(const string& ip, int port, uint32_t signature, uint8_t group_id);
+bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signature, uint8_t group_id);
 
 // ===== MAIN CONTROLLER =====
 // class PuzzleSolver {
@@ -131,9 +135,28 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // TODO: Add calls to solve other ports here
-    // solve_evil_port(ip, evil_port, signature);
+    // Now solve the Evil port
+    if (evil_port > 0) {
+        cout << "\n=== Solving Evil Port with raw socket ===" << endl;
+        if (solve_evil_port_with_raw_socket(ip, evil_port, signature, group_id)) {
+            cout << "SUCCESS: Evil port solved!" << endl;
+        } else {
+            cerr << "FAILED: Could not solve evil port" << endl;
+            return 1;
+        }
+    }
     // solve_checksum_port(ip, checksum_port, signature);
+    // Check for hidden port 4096
+    // if (hidden_port > 0) {
+    //     cout << "\n=== Probing Hidden Port " << hidden_port << " ===" << endl;
+    //     // Implement probe_hidden_port function similarly to solve_secret_port
+    //     if (probe_hidden_port(ip, hidden_port, group_id, signature)) {
+    //         cout << "SUCCESS: Hidden port solved!" << endl;
+    //     } else {
+    //         cerr << "FAILED: Could not solve hidden port" << endl;
+    //         return 1;
+    //     }
+    // }
     // knocking_port(ip, knocking_port, group_id, signature);
 
     return 0;
@@ -363,5 +386,160 @@ string identify_port_with_retry(const string& ip, int port, int max_retries) {
         usleep(100000); // 100ms delay
     }
     return ""; // All attempts failed
+}
 
+bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signature, uint8_t group_id) {
+    cout << "[DEBUG] solve_evil_port called for IP: " << ip << ", port: " << port << endl;
+    
+    // Create a normal UDP socket for receiving responses
+    int recv_sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (recv_sock < 0) {
+        perror("Receive socket creation failed");
+        return false;
+    }
+
+    // Bind the socket to any local address and port 55555
+    sockaddr_in recv_addr{};
+    recv_addr.sin_family = AF_INET;
+    recv_addr.sin_addr.s_addr = INADDR_ANY;
+    recv_addr.sin_port = 0; // Let OS choose the port
+
+    // Here we bind the socket to the address
+    if (bind(recv_sock, (sockaddr*)&recv_addr, sizeof(recv_addr)) < 0) {
+        perror("Bind failed");
+        close(recv_sock);
+        return false;
+    }
+
+    // Get the port assigned by the OS
+    socklen_t addr_len = sizeof(recv_addr);
+    if (getsockname(recv_sock, (sockaddr*)&recv_addr, &addr_len) < 0) {
+        perror("getsockname failed");
+        close(recv_sock);
+        return false;
+    }
+    cout << "[DEBUG] Receive socket bound to port: " << ntohs(recv_addr.sin_port) << endl;
+
+    // Create the raw socket for sending evil packet
+    int raw_sock = socket(AF_INET, SOCK_RAW, IPPROTO_UDP);
+    if (raw_sock < 0) {
+        perror("Raw socket creation failed");
+        close(recv_sock);
+        return false;
+    }
+
+    // Enable IP_HDRINCL to manually provide IP header
+    int one = 1;
+    if (setsockopt(raw_sock, IPPROTO_IP, IP_HDRINCL, &one, sizeof(one)) < 0) {
+        perror("setsockopt IP_HDRINCL failed");
+        close(raw_sock);
+        close(recv_sock);
+        return false;
+    }
+
+    // Build the evil packet
+    char packet[1024];
+    memset(packet, 0, sizeof(packet));
+
+    // IP header
+    struct iphdr* ip_header = (struct iphdr*)packet;
+    ip_header->ihl = 5; // Header length (5 * 4 = 20 bytes)
+    ip_header->version = 4; // IPv4
+    ip_header->tos = 0; // Type of service: normal
+    ip_header->tot_len = htons(sizeof(struct iphdr) + sizeof(struct udphdr) + 4); // Total length (+ 4 because of the payload)
+    ip_header->id = htons(12345); // Identification: random
+    ip_header->frag_off = htons(0x8000); // Set the evil bit (highest bit of fragment offset)
+    ip_header->ttl = 64; // Time to live: 64 hops
+    ip_header->protocol = IPPROTO_UDP; // Protocol: UDP
+    ip_header->check = 0; // Checksum (0 for now, will calculate later)
+
+    // Source and destination IP addresses
+    ip_header->saddr = inet_addr("172.29.175.97");
+
+    // Destination IP address
+    ip_header->daddr = inet_addr(ip.c_str());
+
+    // UDP header
+    struct udphdr* udp_header = (struct udphdr*)(packet + sizeof(struct iphdr));
+    udp_header->source = recv_addr.sin_port; // Source port (the one we bound to)
+    udp_header->dest = htons(port); // Destination port
+    udp_header->len = htons(sizeof(struct udphdr) + 4); // Length of UDP header + payload
+    udp_header->check = 0; // Checksum (optional for UDP)
+
+    // Data (4-byte signature)
+    char* data = packet + sizeof(struct iphdr) + sizeof(struct udphdr);
+    uint32_t net_signature = htonl(signature);
+    memcpy(data, &net_signature, 4); // Copy signature into data (4 bytes and network byte order)
+
+    // Send the packet
+
+    // Destination address structure
+    sockaddr_in dest_addr{};
+    dest_addr.sin_family = AF_INET;
+    dest_addr.sin_addr.s_addr = inet_addr(ip.c_str());
+
+    cout << "[DEBUG] Sending evil packet with evil bit set..." << endl;
+    ssize_t sent = sendto(raw_sock, packet, ntohs(ip_header->tot_len), 0, (sockaddr*)&dest_addr, sizeof(dest_addr));
+    
+    if (sent < 0) {
+        perror("send evil packet failed");
+        close(raw_sock);
+        close(recv_sock);
+        return false;
+    }
+
+    cout << "[DEBUG] Evil packet sent, waiting for response..." << endl;
+
+    // wait for response on the normal UDP socket
+    char response[1024];
+    sockaddr_in from_addr{};
+    socklen_t from_len = sizeof(from_addr);
+
+    timeval tv{};
+    tv.tv_sec = 4; // 4 seconds timeout
+    tv.tv_usec = 0;
+    setsockopt(recv_sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+
+    int received = recvfrom(recv_sock, response, sizeof(response) - 1, 0, (sockaddr*)&from_addr, &from_len);
+
+    if (received > 0) {
+        response[received] = '\0';
+        cout << "Received response from evil port: " << string(response) << endl;
+        close(raw_sock);
+        close(recv_sock);
+        return true; // Successfully received a response
+    } else {
+        cout << "No response received from evil port." << endl;
+        close(raw_sock);
+        close(recv_sock);
+        return false; // No response
+    }
+}
+
+bool probe_hidden_port(const string& ip, int port, uint32_t signature, uint8_t group_id) {
+    cout << "[DEBUG] probe_hidden_port called for IP: " << ip << ", port: " << port << endl;
+
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock < 0) {
+        perror("socket");
+        return false;
+    }
+
+    sockaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    inet_pton(AF_INET, ip.c_str(), &addr.sin_addr);
+
+    // Try sending just the signature first (as other ports expect)
+    uint32_t net_signature = htonl(signature);
+    string response = send_and_receive(sock, addr, string((char*)&net_signature, 4), 2);
+    
+    if (!response.empty()) {
+        cout << "Hidden port response: " << response << endl;
+    } else {
+        cout << "No response from hidden port (might need knocking)" << endl;
+    }
+    
+    close(sock);
+    return false;
 }
