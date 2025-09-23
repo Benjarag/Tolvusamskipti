@@ -15,30 +15,32 @@
 using namespace std;
 
 // ===== DATA STRUCTURES =====
-struct PortInfo {
-    int port;
-    string type; // "secret", "evil", "checksum", "oracle"
-    string response;
-};
+// struct PortInfo {
+//     int port;
+//     string type; // "secret", "evil", "checksum", "oracle"
+//     string response;
+// };
 
-struct PuzzleData {
-    uint8_t group_id;
-    uint32_t signature;
-    int hidden_port;
-    map<string, string> secret_phrases; // port_type -> phrase
-};
+// struct PuzzleData {
+//     uint8_t group_id;
+//     uint32_t signature;
+//     int hidden_port;
+//     map<string, string> secret_phrases; // port_type -> phrase
+// };
 
 // secret, evil bit, checksum, knock i einhverri roð?
 
 
 
 // Function declarations
-bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& signature, int& hidden_port);
+bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& signature, int& secret_hidden_port);
 string send_and_receive(int sock, const sockaddr_in& addr, const string& message, int timeout_sec = 2);
 int extract_port_from_response(const string& response);
 string identify_port_with_retry(const string& ip, int port, int max_retries = 3);
 bool probe_hidden_port(const string& ip, int port, uint32_t signature, uint8_t group_id);
-bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signature, uint8_t group_id);
+bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signature, uint8_t group_id, int& evil_hidden_port);
+bool solve_checksum_port(const string& ip, int port, uint32_t signature, int& checksum_hidden_port);
+bool knocking_port(const string& ip, int port, uint8_t group_id, int secret_hidden_port, int evil_hidden_port, int checksum_hidden_port);
 
 // ===== MAIN CONTROLLER =====
 // class PuzzleSolver {
@@ -116,19 +118,21 @@ int main(int argc, char* argv[]) {
     cout << "Knocking Port: " << knocking_port << endl;
 
     // Setting up variables to hold puzzle data
-    uint8_t group_id;    // not set yet
-    uint32_t signature;  // not set yet
-    int hidden_port;     // not set yet
+    uint8_t group_id;         // not set yet
+    uint32_t signature;       // not set yet
+    int secret_hidden_port;   // not set yet
+    int evil_hidden_port;     // not set yet
+    int checksum_hidden_port; // not set yet
     
     // Now solve the S.E.C.R.E.T. port first
     if (secret_port > 0) {
         cout << "\n=== Solving Secret Port ===" << endl;
-        if (solve_secret_port(ip, secret_port, group_id, signature, hidden_port)) {
+        if (solve_secret_port(ip, secret_port, group_id, signature, secret_hidden_port)) {
             // Now group_id, signature, and hidden_port are set!
             cout << "SUCCESS: Secret port solved!" << endl;
             cout << "Group ID: " << (int)group_id << endl;
             cout << "Signature: " << signature << endl;
-            cout << "Hidden Port: " << hidden_port << endl;
+            cout << "Secret Hidden Port: " << secret_hidden_port << endl;
         } else {
             cerr << "FAILED: Could not solve secret port" << endl;
             return 1;
@@ -138,25 +142,28 @@ int main(int argc, char* argv[]) {
     // Now solve the Evil port
     if (evil_port > 0) {
         cout << "\n=== Solving Evil Port with raw socket ===" << endl;
-        if (solve_evil_port_with_raw_socket(ip, evil_port, signature, group_id)) {
+        if (solve_evil_port_with_raw_socket(ip, evil_port, signature, group_id, evil_hidden_port)) {
             cout << "SUCCESS: Evil port solved!" << endl;
+            cout << "Evil Hidden Port: " << evil_hidden_port << endl;
         } else {
             cerr << "FAILED: Could not solve evil port" << endl;
             return 1;
         }
     }
-    // solve_checksum_port(ip, checksum_port, signature);
-    // Check for hidden port 4096
-    // if (hidden_port > 0) {
-    //     cout << "\n=== Probing Hidden Port " << hidden_port << " ===" << endl;
-    //     // Implement probe_hidden_port function similarly to solve_secret_port
-    //     if (probe_hidden_port(ip, hidden_port, group_id, signature)) {
-    //         cout << "SUCCESS: Hidden port solved!" << endl;
-    //     } else {
-    //         cerr << "FAILED: Could not solve hidden port" << endl;
-    //         return 1;
-    //     }
-    // }
+
+    // Now solve the Checksum port
+    if (checksum_port > 0) {
+        cout << "\n=== Solving Checksum Port ===" << endl;
+        if (solve_checksum_port(ip, checksum_port, signature, checksum_hidden_port)) {
+            cout << "SUCCESS: Checksum port solved!" << endl;
+            cout << "Checksum Hidden Port: " << checksum_hidden_port << endl;
+        } else {
+            cerr << "FAILED: Could not solve checksum port" << endl;
+            return 1;
+        }
+    }
+
+
     // knocking_port(ip, knocking_port, group_id, signature);
 
     return 0;
@@ -166,7 +173,7 @@ int main(int argc, char* argv[]) {
 
 // secret function
 // Function to solve the S.E.C.R.E.T. port puzzle (implementation to be added)
-bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& signature, int& hidden_port) {
+bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& signature, int& secret_hidden_port) {
     cout << "[DEBUG] solve_secret_port called for IP: " << ip << ", port: " << port << endl;
     // 1. Generate a 32 bit secret number (and remember it for later)
     // first gennerate a random 32 bit number
@@ -290,10 +297,10 @@ bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& 
             string response_str(port_response);
             cout << "[DEBUG] Received port response: " << response_str << endl;
             
-            hidden_port = extract_port_from_response(response_str);
-            
-            if (hidden_port > 0) {
-                cout << "Extracted hidden port: " << hidden_port << endl;
+            secret_hidden_port = extract_port_from_response(response_str);
+
+            if (secret_hidden_port > 0) {
+                cout << "Extracted hidden port: " << secret_hidden_port << endl;
                 step2_success = true; // we succeeded in step 2
                 break; // exit the retry loop
             }
@@ -388,7 +395,7 @@ string identify_port_with_retry(const string& ip, int port, int max_retries) {
     return ""; // All attempts failed
 }
 
-bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signature, uint8_t group_id) {
+bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signature, uint8_t group_id, int& evil_hidden_port) {
     cout << "[DEBUG] solve_evil_port called for IP: " << ip << ", port: " << port << endl;
     
     // Create a normal UDP socket for receiving responses
@@ -479,42 +486,157 @@ bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signat
     dest_addr.sin_addr.s_addr = inet_addr(ip.c_str());
 
     cout << "[DEBUG] Sending evil packet with evil bit set..." << endl;
-    ssize_t sent = sendto(raw_sock, packet, ntohs(ip_header->tot_len), 0, (sockaddr*)&dest_addr, sizeof(dest_addr));
-    
-    if (sent < 0) {
-        perror("send evil packet failed");
-        close(raw_sock);
-        close(recv_sock);
+
+    const int max_attempts = 3;
+    bool success = false;
+    for (int attempt = 0; attempt < max_attempts && !success; attempt++) {
+        ssize_t sent = sendto(raw_sock, packet, ntohs(ip_header->tot_len), 0, (sockaddr*)&dest_addr, sizeof(dest_addr));
+        
+        if (sent < 0) {
+            perror("send evil packet failed");
+            close(raw_sock);
+            close(recv_sock);
+            return false;
+        }
+
+        cout << "[DEBUG] Evil packet sent, waiting for response..." << endl;
+
+        // wait for response on the normal UDP socket
+        char response[1024];
+        sockaddr_in from_addr{};
+        socklen_t from_len = sizeof(from_addr);
+
+        timeval tv{};
+        tv.tv_sec = 4; // 4 seconds timeout
+        tv.tv_usec = 0;
+        setsockopt(recv_sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+
+        int received = recvfrom(recv_sock, response, sizeof(response) - 1, 0, (sockaddr*)&from_addr, &from_len);
+
+        if (received > 0) {
+            response[received] = '\0';
+            string response_str(response);
+            cout << "Received response from evil port: " << response_str << endl;
+
+            evil_hidden_port = extract_port_from_response(response_str);
+
+            if (evil_hidden_port > 0) {
+                cout << "Extracted hidden port: " << evil_hidden_port << endl;
+                success = true; // we succeeded
+                break; // exit the retry loop
+            } 
+            else {
+                cout << "Could not extract hidden port from response." << endl;
+                usleep(100000); // wait 100ms before retrying
+            }
+        } 
+        else {
+            usleep(100000); // wait 100ms before retrying
+            cout << "No response received from evil port, retrying..." << endl;
+        }
+    }
+    close(raw_sock);
+    close(recv_sock);
+    return success;
+}
+
+bool solve_checksum_port(const string& ip, int port, uint32_t signature, int& checksum_hidden_port) {
+    cout << "[DEBUG] solve_checksum_port called for IP: " << ip << ", port: " << port << endl;
+
+    // Create UDP socket
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock < 0) {
+        perror("socket creation failed");
         return false;
     }
 
-    cout << "[DEBUG] Evil packet sent, waiting for response..." << endl;
-
-    // wait for response on the normal UDP socket
-    char response[1024];
-    sockaddr_in from_addr{};
-    socklen_t from_len = sizeof(from_addr);
-
+    // Setting the timeout
     timeval tv{};
-    tv.tv_sec = 4; // 4 seconds timeout
+    tv.tv_sec = 2; // 2 seconds timeout
     tv.tv_usec = 0;
-    setsockopt(recv_sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+    if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
+        perror("setsockopt failed");
+        close(sock);
+        return false;
+    }
 
-    int received = recvfrom(recv_sock, response, sizeof(response) - 1, 0, (sockaddr*)&from_addr, &from_len);
+    // Setting up the sockaddr_in structure for the server
+    sockaddr_in server_addr{};
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(port);
+    inet_pton(AF_INET, ip.c_str(), &server_addr.sin_addr);
 
-    if (received > 0) {
-        response[received] = '\0';
-        cout << "Received response from evil port: " << string(response) << endl;
-        close(raw_sock);
-        close(recv_sock);
-        return true; // Successfully received a response
-    } else {
-        cout << "No response received from evil port." << endl;
-        close(raw_sock);
-        close(recv_sock);
-        return false; // No response
+    bool success = false;
+    const int max_attempts = 3;
+    string response;
+    for (int attempt = 0; attempt < max_attempts && !success; attempt++) {
+        // Send me a 4-byte message containing the signature you got from S.E.C.R.E.T in the first 4 bytes (in network byte order).
+        uint32_t net_signature = htonl(signature);
+        cout << "Sending signature to checksum port (attempt " << attempt + 1 << ")" << endl;
+
+        string response = send_and_receive(sock, server_addr, string((char*)&net_signature, 4), 2);
+
+        if (!response.empty()) {
+            cout << "Received response from checksum port: " << response << endl;
+            success = true;
+            break; // exit the retry loop
+        } 
+        else {
+            usleep(100000); // wait 100ms before retrying
+            cout << "No response received from checksum port, retrying..." << endl;
+        }
+    }
+    
+    if (!success) {
+        cerr << "Failed to get response from checksum port after " << max_attempts << " attempts." << endl;
+        close(sock);
+        return false;
+    }
+    else {
+        cout << "Successfully communicated with checksum port." << endl;
+        // (Hint: all you need is a normal UDP socket which you use to send the IPv4 and UDP headers possibly with a payload) 
+        // (the last 6 bytes of this message contain the checksum and ip address in network byte order for your convenience)R�+j�y
+        if (response.size() < 6) {
+            cerr << "Response too short to extract checksum and IP." << endl;
+            close(sock);
+            return false;
+        }
+        else {
+            // Using the last 6 bytes to extract the checksum and IP address from the response without having to parse the string
+            const char* resp_data = response.data();
+            uint16_t checksum;
+            uint32_t ip_addr;
+            memcpy(&checksum, resp_data + response.size() - 6, 2);
+            memcpy(&ip_addr, resp_data + response.size() - 4, 4);
+            checksum = ntohs(checksum);
+            ip_addr = ntohl(ip_addr);
+
+            cout << "[DEBUG] Extracted checksum: 0x" << hex << checksum << dec << ", IP: " 
+                 << ((ip_addr >> 24) & 0xFF) << "." 
+                 << ((ip_addr >> 16) & 0xFF) << "." 
+                 << ((ip_addr >> 8) & 0xFF) << "." 
+                 << (ip_addr & 0xFF) << endl;
+            
+            // Now we need to construct the encapsulated UDP packet with the given checksum and source IP
+            // build the checksum packet
+            char packet[1024];
+            memset(packet, 0, sizeof(packet));
+
+            // UDP message where the payload is an encapsulated, valid UDP IPv4 packet,
+            // that has a valid UDP checksum of 0x52ba, and with the source address being 43.106.205.121! 
+
+            // IP header
+            struct iphdr* ip_header = (struct iphdr*)packet;
+
+            ip_header->version = 4; // IPv4
+            
+
+            // UDP header
+            struct udphdr* udp_header = (struct udphdr*)(packet + sizeof(struct iphdr));
+        }
     }
 }
+
 
 bool probe_hidden_port(const string& ip, int port, uint32_t signature, uint8_t group_id) {
     cout << "[DEBUG] probe_hidden_port called for IP: " << ip << ", port: " << port << endl;
