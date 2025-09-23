@@ -63,10 +63,10 @@ int main(int argc, char* argv[]) {
     }
 
     // Identify which port is which
-    int secret_port, evil_port, checksum_port, knocking_port = -1;
+    int secret_port = -1, evil_port = -1, checksum_port = -1, knocking_port = -1;
     for (int port : ports) {
         string response = identify_port_with_retry(ip, port, 3);
-
+        
         if (response.find("Greetings from S.E.C.R.E.T.") != string::npos) {
             secret_port = port;
             cout << "Found S.E.C.R.E.T. port: " << port << endl;
@@ -83,8 +83,8 @@ int main(int argc, char* argv[]) {
             knocking_port = port;
             cout << "Found E.X.P.S.T.N + knocking port: " << port << endl;
         }
-        else {
-            cout << "Unknown port type at port: " << port << endl;
+        else if (!response.empty()) {
+            cout << "Unknown response from port " << port << ": " << response.substr(0, 100) << endl;
         }
     }
 
@@ -117,16 +117,18 @@ int main(int argc, char* argv[]) {
     int hidden_port;     // not set yet
     
     // Now solve the S.E.C.R.E.T. port first
-    cout << "\n=== Solving Secret Port ===" << endl;
-    if (solve_secret_port(ip, secret_port, group_id, signature, hidden_port)) {
-        // Now group_id, signature, and hidden_port are set!
-        cout << "SUCCESS: Secret port solved!" << endl;
-        cout << "Group ID: " << (int)group_id << endl;
-        cout << "Signature: " << signature << endl;
-        cout << "Hidden Port: " << hidden_port << endl;
-    } else {
-        cerr << "FAILED: Could not solve secret port" << endl;
-        return 1;
+    if (secret_port > 0) {
+        cout << "\n=== Solving Secret Port ===" << endl;
+        if (solve_secret_port(ip, secret_port, group_id, signature, hidden_port)) {
+            // Now group_id, signature, and hidden_port are set!
+            cout << "SUCCESS: Secret port solved!" << endl;
+            cout << "Group ID: " << (int)group_id << endl;
+            cout << "Signature: " << signature << endl;
+            cout << "Hidden Port: " << hidden_port << endl;
+        } else {
+            cerr << "FAILED: Could not solve secret port" << endl;
+            return 1;
+        }
     }
 
     // TODO: Add calls to solve other ports here
@@ -200,7 +202,7 @@ bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& 
 
         // Set timeout for receiving challenge
         timeval tv{};
-        tv.tv_sec = 2;
+        tv.tv_sec = 4;
         tv.tv_usec = 0;
         setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
@@ -254,7 +256,7 @@ bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& 
         
         // Set timeout for receiving port
         timeval tv{};
-        tv.tv_sec = 3;
+        tv.tv_sec = 4;
         tv.tv_usec = 0;
         setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
@@ -345,8 +347,8 @@ string identify_port_with_retry(const string& ip, int port, int max_retries) {
 
         // Set shorter timeout for identification
         timeval tv{};
-        tv.tv_sec = 0;
-        tv.tv_usec = 500000; // 500ms
+        tv.tv_sec = 1;
+        tv.tv_usec = 0;
         setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
         string response = send_and_receive(sock, addr, "Hello", 1);
