@@ -39,8 +39,10 @@ int extract_port_from_response(const string& response);
 string identify_port_with_retry(const string& ip, int port, int max_retries = 3);
 bool probe_hidden_port(const string& ip, int port, uint32_t signature, uint8_t group_id);
 bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signature, uint8_t group_id, int& evil_hidden_port);
-bool solve_checksum_port(const string& ip, int port, uint32_t signature, int& checksum_hidden_port);
-bool knocking_port(const string& ip, int port, uint8_t group_id, int secret_hidden_port, int evil_hidden_port, int checksum_hidden_port);
+bool solve_checksum_port(const string& ip, int port, uint32_t signature, string& secret_phrase);
+unsigned short calculate_ip_checksum(unsigned short* buf, int nwords);
+bool knocking_port(const string& ip, int port, uint8_t group_id, int secret_hidden_port, int evil_hidden_port, const string& secret_phrase);
+
 
 // ===== MAIN CONTROLLER =====
 // class PuzzleSolver {
@@ -122,7 +124,7 @@ int main(int argc, char* argv[]) {
     uint32_t signature;       // not set yet
     int secret_hidden_port;   // not set yet
     int evil_hidden_port;     // not set yet
-    int checksum_hidden_port; // not set yet
+    string secret_phrase; // not set yet
     
     // Now solve the S.E.C.R.E.T. port first
     if (secret_port > 0) {
@@ -154,9 +156,9 @@ int main(int argc, char* argv[]) {
     // Now solve the Checksum port
     if (checksum_port > 0) {
         cout << "\n=== Solving Checksum Port ===" << endl;
-        if (solve_checksum_port(ip, checksum_port, signature, checksum_hidden_port)) {
+        if (solve_checksum_port(ip, checksum_port, signature, secret_phrase)) {
             cout << "SUCCESS: Checksum port solved!" << endl;
-            cout << "Checksum Hidden Port: " << checksum_hidden_port << endl;
+            cout << "Checksum Secret Phrase: " << secret_phrase << endl;
         } else {
             cerr << "FAILED: Could not solve checksum port" << endl;
             return 1;
@@ -458,7 +460,6 @@ bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signat
     ip_header->frag_off = htons(0x8000); // Set the evil bit (highest bit of fragment offset)
     ip_header->ttl = 64; // Time to live: 64 hops
     ip_header->protocol = IPPROTO_UDP; // Protocol: UDP
-    ip_header->check = 0; // Checksum (0 for now, will calculate later)
 
     // Source and destination IP addresses
     ip_header->saddr = inet_addr("172.29.175.97");
@@ -540,7 +541,7 @@ bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signat
     return success;
 }
 
-bool solve_checksum_port(const string& ip, int port, uint32_t signature, int& checksum_hidden_port) {
+bool solve_checksum_port(const string& ip, int port, uint32_t signature, string& secret_phrase) {
     cout << "[DEBUG] solve_checksum_port called for IP: " << ip << ", port: " << port << endl;
 
     // Create UDP socket
@@ -574,7 +575,7 @@ bool solve_checksum_port(const string& ip, int port, uint32_t signature, int& ch
         uint32_t net_signature = htonl(signature);
         cout << "Sending signature to checksum port (attempt " << attempt + 1 << ")" << endl;
 
-        string response = send_and_receive(sock, server_addr, string((char*)&net_signature, 4), 2);
+        response = send_and_receive(sock, server_addr, string((char*)&net_signature, 4), 2);
 
         if (!response.empty()) {
             cout << "Received response from checksum port: " << response << endl;
@@ -592,51 +593,72 @@ bool solve_checksum_port(const string& ip, int port, uint32_t signature, int& ch
         close(sock);
         return false;
     }
-    else {
-        cout << "Successfully communicated with checksum port." << endl;
-        // (Hint: all you need is a normal UDP socket which you use to send the IPv4 and UDP headers possibly with a payload) 
-        // (the last 6 bytes of this message contain the checksum and ip address in network byte order for your convenience)R�+j�y
-        if (response.size() < 6) {
-            cerr << "Response too short to extract checksum and IP." << endl;
-            close(sock);
-            return false;
-        }
-        else {
-            // Using the last 6 bytes to extract the checksum and IP address from the response without having to parse the string
-            const char* resp_data = response.data();
-            uint16_t checksum;
-            uint32_t ip_addr;
-            memcpy(&checksum, resp_data + response.size() - 6, 2);
-            memcpy(&ip_addr, resp_data + response.size() - 4, 4);
-            checksum = ntohs(checksum);
-            ip_addr = ntohl(ip_addr);
 
-            cout << "[DEBUG] Extracted checksum: 0x" << hex << checksum << dec << ", IP: " 
-                 << ((ip_addr >> 24) & 0xFF) << "." 
-                 << ((ip_addr >> 16) & 0xFF) << "." 
-                 << ((ip_addr >> 8) & 0xFF) << "." 
-                 << (ip_addr & 0xFF) << endl;
-            
-            // Now we need to construct the encapsulated UDP packet with the given checksum and source IP
-            // build the checksum packet
-            char packet[1024];
-            memset(packet, 0, sizeof(packet));
-
-            // UDP message where the payload is an encapsulated, valid UDP IPv4 packet,
-            // that has a valid UDP checksum of 0x52ba, and with the source address being 43.106.205.121! 
-
-            // IP header
-            struct iphdr* ip_header = (struct iphdr*)packet;
-
-            ip_header->version = 4; // IPv4
-            
-
-            // UDP header
-            struct udphdr* udp_header = (struct udphdr*)(packet + sizeof(struct iphdr));
-        }
+    cout << "Successfully communicated with checksum port." << endl;
+    // (Hint: all you need is a normal UDP socket which you use to send the IPv4 and UDP headers possibly with a payload) 
+    // (the last 6 bytes of this message contain the checksum and ip address in network byte order for your convenience)R�+j�y
+    if (response.size() < 6) {
+        cerr << "Response too short to extract checksum and IP." << endl;
+        close(sock);
+        return false;
     }
+
+    // Using the last 6 bytes to extract the checksum and IP address from the response without having to parse the string
+    const char* resp_data = response.data();
+    uint16_t checksum;
+    uint32_t ip_addr;
+    memcpy(&checksum, resp_data + response.size() - 6, 2); // first 2 bytes of the last 6 bytes
+    memcpy(&ip_addr, resp_data + response.size() - 4, 4); // remaining 4 bytes of the last 6 bytes
+    // convert from network byte order to host byte order
+    checksum = ntohs(checksum);
+    ip_addr = ntohl(ip_addr);
+
+    cout << "[DEBUG] Extracted checksum: 0x" << hex << checksum << dec << ", IP: " 
+            << ((ip_addr >> 24) & 0xFF) << "." 
+            << ((ip_addr >> 16) & 0xFF) << "." 
+            << ((ip_addr >> 8) & 0xFF) << "." 
+            << (ip_addr & 0xFF) << endl;
+    
+    // build the checksum packet
+    char packet[1024];
+    memset(packet, 0, sizeof(packet));
+
+    // UDP message where the payload is an encapsulated, valid UDP IPv4 packet,
+    // that has a valid UDP checksum of 0x52ba, and with the source address being 43.106.205.121! 
+
+    // IP header
+    struct iphdr* ip_header = (struct iphdr*)packet;
+    ip_header->ihl = 5; // Header length (5 * 4 = 20 bytes)
+    ip_header->version = 4; // IPv4
+    ip_header->tos = 0; // Type of service: normal
+    ip_header->tot_len = htons(sizeof(struct iphdr) + sizeof(struct udphdr)); // Total length
+    ip_header->id = htons(13245); // Identification: random
+    ip_header->frag_off = 0; // No fragmentation
+    ip_header->ttl = 64; // Time to live: 64 hops
+    ip_header->protocol = IPPROTO_UDP; // Protocol: UDP
+    ip_header->check = 0; // Checksum (will be calculated later)
+    ip_header->saddr = htonl(ip_addr); // Source IP address from response, converted from integer to network byte order
+    ip_header->daddr = inet_addr(ip.c_str()); // Destination IP address, converted from string to network byte order
+    
+    // Calculate IP checksum
+    ip_header->check = calculate_ip_checksum((unsigned short*)ip_header, sizeof(struct iphdr));
+
+    // Inner UDP header
+    struct udphdr* udp_header = (struct udphdr*)(packet + sizeof(struct iphdr));
+
+    return false;
 }
 
+unsigned short calculate_ip_checksum(unsigned short* buf, int nwords) {
+    unsigned long sum = 0;
+    for (int i = 0; i < nwords; i++) {
+        sum += buf[i];
+    }
+    while (sum >> 16) {
+        sum = (sum & 0xFFFF) + (sum >> 16);
+    }
+    return (unsigned short)(~sum);
+}
 
 bool probe_hidden_port(const string& ip, int port, uint32_t signature, uint8_t group_id) {
     cout << "[DEBUG] probe_hidden_port called for IP: " << ip << ", port: " << port << endl;
