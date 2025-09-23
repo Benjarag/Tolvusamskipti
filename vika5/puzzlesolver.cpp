@@ -34,6 +34,7 @@ struct PuzzleData {
 bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& signature, int& hidden_port);
 string send_and_receive(int sock, const sockaddr_in& addr, const string& message, int timeout_sec = 2);
 int extract_port_from_response(const string& response);
+string identify_port_with_retry(const string& ip, int port, int max_retries = 3);
 
 // ===== MAIN CONTROLLER =====
 // class PuzzleSolver {
@@ -64,20 +65,8 @@ int main(int argc, char* argv[]) {
     // Identify which port is which
     int secret_port, evil_port, checksum_port, knocking_port = -1;
     for (int port : ports) {
-        int sock = socket(AF_INET, SOCK_DGRAM, 0); // Create UDP socket
-        if (sock < 0) {
-            perror("socket");
-            continue;
-        }
+        string response = identify_port_with_retry(ip, port, 3);
 
-        // Setting up the sockaddr_in structure for the server
-        sockaddr_in addr{};
-        addr.sin_family = AF_INET;
-        addr.sin_port = htons(port);
-        inet_pton(AF_INET, ip.c_str(), &addr.sin_addr);
-
-        // Quick probe to identify port type
-        string response = send_and_receive(sock, addr, "Hello", 1);
         if (response.find("Greetings from S.E.C.R.E.T.") != string::npos) {
             secret_port = port;
             cout << "Found S.E.C.R.E.T. port: " << port << endl;
@@ -97,7 +86,6 @@ int main(int argc, char* argv[]) {
         else {
             cout << "Unknown port type at port: " << port << endl;
         }
-        close(sock);
     }
 
     if (secret_port == -1) {
@@ -188,88 +176,114 @@ bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& 
     // 2. Send me a message where the first byte is the letter 'S' followed by 4 bytes containing your secret number (in network byte order),
     // and the rest of the message is a comma-separated list of the RU usernames of all your group members.
     string usernames = "benjaminr23,sindrib23,oliver23";
-    char message[1 + 4 + usernames.size()];
-    message[0] = 'S'; // first byte is 'S'
-    uint32_t net_secret = htonl(secret_number); // convert to network byte order
-    memcpy(message + 1, &net_secret, 4); // putting the secret number in next 4 bytes as network byte order
-    strcpy(message + 1 + 4, usernames.c_str()); // copy usernames after that
 
-    int message_len = 1 + 4 + usernames.size();
+    bool step1_success = false;
+    for (int attempt = 0; attempt < 3 && !step1_success; attempt++) {
+        char message[1 + 4 + usernames.size()];
+        message[0] = 'S'; // first byte is 'S'
+        uint32_t net_secret = htonl(secret_number); // convert to network byte order
+        memcpy(message + 1, &net_secret, 4); // putting the secret number in next 4 bytes as network byte order
+        strcpy(message + 1 + 4, usernames.c_str()); // copy usernames after that
 
-    cout << "Sending initial message..." << endl;
-    if (sendto(sock, message, message_len, 0, 
-               (sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
-        perror("Send failed");
-        close(sock);
-        return false;
-    }
+        int message_len = 1 + 4 + usernames.size();
 
-    // 3. I will reply with a 5-byte message, where the first byte is your group ID and the remaining 4 bytes are a 32 bit challenge number (in network byte order)
-    char challenge_response_message[5]; // the 5 byte response message
-    sockaddr_in from_addr{};
-    socklen_t from_len = sizeof(from_addr); 
+        cout << "Sending initial message (attempt " << (attempt + 1) << ")..." << endl;
+        if (sendto(sock, message, message_len, 0, (sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+            perror("Send failed");
+            continue; // try again
+        }
 
-    int received = recvfrom(sock, challenge_response_message, 5, 0, (sockaddr*)&from_addr, &from_len);
+        // 3. I will reply with a 5-byte message, where the first byte is your group ID and the remaining 4 bytes are a 32 bit challenge number (in network byte order)
+        char challenge_response_message[5]; // the 5 byte response message
+        sockaddr_in from_addr{};
+        socklen_t from_len = sizeof(from_addr); 
 
-    if (received != 5) {
-        perror("Receive failed");
-        close(sock);
-        return false;
-    }
+        // Set timeout for receiving challenge
+        timeval tv{};
+        tv.tv_sec = 2;
+        tv.tv_usec = 0;
+        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
-    group_id = challenge_response_message[0];
-    uint32_t challenge;
-    memcpy(&challenge, challenge_response_message + 1, 4);
-    challenge = ntohl(challenge); // convert from network byte order to host byte order
 
-    cout << "[DEBUG] Received group ID: " << (int)group_id << ", challenge: " << challenge << endl;
-    
-    // 4. Combine this challenge using the XOR operation with the secret number you generated in step 1 to obtain a 4 byte signature.
-    signature = challenge ^ secret_number;
-    cout << "[DEBUG] Computed signature: " << signature << endl;
+        int received = recvfrom(sock, challenge_response_message, 5, 0, (sockaddr*)&from_addr, &from_len);
 
-    // 5. Reply with a 5-byte message: the first byte is your group number, followed by the 4-byte signature (in network byte order).
-    char reply_message[5];
-    reply_message[0] = group_id;
-    uint32_t net_signature = htonl(signature); // convert signature to network byte order
-    memcpy(reply_message + 1, &net_signature, 4); // copy signature into message
-
-    // send the reply message
-    cout << "Sending signature reply..." << endl;
-    if (sendto(sock, reply_message, 5, 0, (sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
-        perror("Send failed");
-        close(sock);
-        return false;
-    }
-
-    // 6. If your signature is correct, I will respond with a secret port number. Good luck!
-    char port_response[1024];
-    received = recvfrom(sock, port_response, sizeof(port_response) - 1, 0, (sockaddr*)&from_addr, &from_len);
-    
-    if (received < 0) {
-        perror("Receive failed");
-        close(sock);
-        return false;
-    }
-    else if (received > 0) {
-        port_response[received] = '\0'; // null-terminate the response
-        string response_str(port_response);
-        cout << "[DEBUG] Received port response: " << response_str << endl;
-        hidden_port = extract_port_from_response(response_str);
-        if (hidden_port > 0) {
-            cout << "Extracted hidden port: " << hidden_port << endl;
-            close(sock);
-            return true; // success
+        if (received == 5) {
+            group_id = challenge_response_message[0];
+            uint32_t challenge;
+            memcpy(&challenge, challenge_response_message + 1, 4);
+            challenge = ntohl(challenge); // convert from network byte order to host byte order
+        
+            cout << "[DEBUG] Received group ID: " << (int)group_id << ", challenge: " << challenge << endl;
+            
+            // 4. Combine this challenge using the XOR operation with the secret number you generated in step 1 to obtain a 4 byte signature.
+            signature = challenge ^ secret_number;
+            cout << "[DEBUG] Computed signature: " << signature << endl;
+            step1_success = true; // we succeeded in step 1
         }
         else {
-            cerr << "Could not extract hidden port from response" << endl;
-            close(sock);
-            return false;
+            usleep(100000); // wait 100ms before retrying
+            cout << "Did not receive valid challenge response, retrying..." << endl;
+        }
+    }
+
+    if (!step1_success) {
+        cerr << "Failed to complete step 1 after 3 attempts." << endl;
+        close(sock);
+        return false;
+    }
+
+    // 5. Reply with a 5-byte message: the first byte is your group number, followed by the 4-byte signature (in network byte order).
+    bool step2_success = false;
+    for (int attempt = 0; attempt < 3 && !step2_success; attempt++) {
+        char reply_message[5];
+        reply_message[0] = group_id;
+        uint32_t net_signature = htonl(signature); // convert signature to network byte order
+        memcpy(reply_message + 1, &net_signature, 4); // copy signature into message
+
+        // send the reply message
+        cout << "Sending signature reply (attempt " << (attempt + 1) << ")..." << endl;
+        if (sendto(sock, reply_message, 5, 0, (sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+            perror("Send failed");
+            continue; // try again
+        }
+
+        // 6. If your signature is correct, I will respond with a secret port number. Good luck!
+        char port_response[1024];
+        sockaddr_in from_addr{};
+        socklen_t from_len = sizeof(from_addr);
+        
+        // Set timeout for receiving port
+        timeval tv{};
+        tv.tv_sec = 3;
+        tv.tv_usec = 0;
+        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+
+        int received = recvfrom(sock, port_response, sizeof(port_response) - 1, 0, (sockaddr*)&from_addr, &from_len);
+        
+        if (received > 0) {
+            port_response[received] = '\0'; // null-terminate the response
+            string response_str(port_response);
+            cout << "[DEBUG] Received port response: " << response_str << endl;
+            
+            hidden_port = extract_port_from_response(response_str);
+            
+            if (hidden_port > 0) {
+                cout << "Extracted hidden port: " << hidden_port << endl;
+                step2_success = true; // we succeeded in step 2
+                break; // exit the retry loop
+            }
+            else {
+                cerr << "Could not extract hidden port from response, retrying" << endl;
+                usleep(100000); // wait 100ms before retrying
+            }
+        }
+        else {
+            usleep(100000); // wait 100ms before retrying
+            cout << "Did not receive valid port response, retrying..." << endl;
         }
     }
     close(sock);
-    return false;
-
+    return step2_success;
     // 7. Remember to keep your group ID and signature for later, you will need them for
     // this was done with the reference variables passed in
 }
@@ -313,4 +327,39 @@ string send_and_receive(int sock, const sockaddr_in& addr, const string& message
         return string(buffer);
     }
     return "";
+}
+
+string identify_port_with_retry(const string& ip, int port, int max_retries) {
+    for (int attempt = 1; attempt <= max_retries; ++attempt) {
+        int sock = socket(AF_INET, SOCK_DGRAM, 0); // Create UDP socket
+        if (sock < 0) {
+            perror("socket creation failed");
+            continue;
+        }
+
+        // Setting up the sockaddr_in structure for the server
+        sockaddr_in addr{};
+        addr.sin_family = AF_INET;
+        addr.sin_port = htons(port);
+        inet_pton(AF_INET, ip.c_str(), &addr.sin_addr);
+
+        // Set shorter timeout for identification
+        timeval tv{};
+        tv.tv_sec = 0;
+        tv.tv_usec = 500000; // 500ms
+        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+
+        string response = send_and_receive(sock, addr, "Hello", 1);
+        close(sock);
+
+        if (!response.empty()) {
+            return response; // Successfully received a response
+        } else {
+            cout << "Attempt " << attempt << " failed for port " << port << ". Retrying..." << endl;
+        }
+        // Wait before retry
+        usleep(100000); // 100ms delay
+    }
+    return ""; // All attempts failed
+
 }
