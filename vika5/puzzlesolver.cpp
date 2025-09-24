@@ -11,22 +11,11 @@
 #include <map>
 #include <netinet/ip.h>
 #include <netinet/udp.h>
+#include <netinet/ip_icmp.h>
 
 using namespace std;
 
 // ===== DATA STRUCTURES =====
-// struct PortInfo {
-//     int port;
-//     string type; // "secret", "evil", "checksum", "oracle"
-//     string response;
-// };
-
-// struct PuzzleData {
-//     uint8_t group_id;
-//     uint32_t signature;
-//     int hidden_port;
-//     map<string, string> secret_phrases; // port_type -> phrase
-// };
 
 struct pseudo_header {
     u_int32_t source_address;
@@ -35,9 +24,6 @@ struct pseudo_header {
     u_int8_t protocol;
     u_int16_t udp_length;
 };
-
-// secret, evil bit, checksum, knock i einhverri roð?
-
 
 
 // Function declarations
@@ -50,19 +36,8 @@ bool solve_checksum_port(const string& ip, int port, uint32_t signature, string&
 uint16_t compute_udp_checksum(const u_char *const buffer, int buffer_len);
 bool solve_knocking_port(const string& ip, int port, uint32_t signature, int secret_hidden_port, int evil_hidden_port, const string& secret_phrase);
 bool knock_hidden_port(const string& ip, int port, uint32_t signature, const string& secret_phrase);
-
-
-// ===== MAIN CONTROLLER =====
-// class PuzzleSolver {
-// private:
-//     string server_ip;
-//     map<string, PortInfo> ports;
-//     PuzzleData data;
-    
-// public:
-//     PuzzleSolver(const string& ip, const vector<int>& port_list) : server_ip(ip) {
-    
-//     }
+bool send_icmp_bonus(const string& ip, uint8_t group_id);
+uint16_t compute_icmp_checksum(uint16_t* data, int length);
 
 
 int main(int argc, char* argv[]) {
@@ -200,6 +175,17 @@ int main(int argc, char* argv[]) {
             return 1;
         }
     }
+
+    // Bonus: Send ICMP packet to the server
+    cout << "\n=== Sending ICMP Bonus Packet ===" << endl;
+    if (send_icmp_bonus(ip, group_id)) {
+        cout << "SUCCESS: ICMP packet sent!" << endl;
+    } else {
+        cerr << "FAILED: Could not send ICMP packet" << endl;
+        return 1;
+    }
+
+    cout << "\n=== Puzzle Solved Successfully! ===" << endl;
 
     return 0;
 }
@@ -410,7 +396,7 @@ string identify_port_with_retry(const string& ip, int port, int max_retries) {
 
         // Set shorter timeout for identification
         timeval tv{};
-        tv.tv_sec = 1;
+        tv.tv_sec = 2;
         tv.tv_usec = 0;
         setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
@@ -846,7 +832,6 @@ bool solve_knocking_port(const string& ip, int port, uint32_t signature, int sec
     // After completing the knocking sequence, we should receive a final confirmation message
     response = send_and_receive(sock, server_addr, "FINALIZE", 2);
     if (!response.empty()) {
-        cout << "Final response from knocking port: " << response << endl;
         close(sock);
         return true;
     } else {
@@ -856,7 +841,6 @@ bool solve_knocking_port(const string& ip, int port, uint32_t signature, int sec
 
     return false;
 }
-
 
 bool knock_hidden_port(const string& ip, int port, uint32_t signature, const string& secret_phrase) {
     cout << "[DEBUG] knock_hidden_port called for IP: " << ip << ", port: " << port << endl;
@@ -897,4 +881,102 @@ bool knock_hidden_port(const string& ip, int port, uint32_t signature, const str
 
     close(sock);
     return true;
+}
+
+bool send_icmp_bonus(const string& ip, uint8_t group_id) {
+    cout << "Sending ICMP echo request to " << ip << " with group ID: " << (int)group_id << endl;
+
+    // Create raw socket for ICMP
+    int sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    if (sock < 0) {
+        perror("socket (ICMP) creation failed");
+        return false;
+    }
+
+    // Set timeout
+    timeval tv{};
+    tv.tv_sec = 5;
+    tv.tv_usec = 0;
+    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+
+    // Build destination address
+    sockaddr_in dest_addr{};
+    dest_addr.sin_family = AF_INET;
+    inet_pton(AF_INET, ip.c_str(), &dest_addr.sin_addr);
+
+    // Create the payload message: "$group_#$" where # is our group number
+    string payload = "$group_" + to_string((int)group_id) + "$";
+    
+    // Calculate total packet size: ICMP header + payload
+    int packet_size = sizeof(struct icmphdr) + payload.size();
+    char packet[packet_size];
+    
+    // Clear the packet memory
+    memset(packet, 0, packet_size);
+
+    // Build ICMP packet
+    struct icmphdr *icmp_header = (struct icmphdr*)packet;
+    icmp_header->type = ICMP_ECHO; // ICMP echo request
+    icmp_header->code = 0; // code 0 for echo request
+    icmp_header->un.echo.id = htons(0x1234); // Identifier
+    icmp_header->un.echo.sequence = htons(1); // Sequence number: 1, because we send only one packet
+
+    // Copy our payload message after the ICMP header
+    memcpy(packet + sizeof(struct icmphdr), payload.c_str(), payload.size()); // Sample payload
+
+    // Calculate checksum (this is like a "parity check" to make sure data isn't corrupted)
+    icmp_header->checksum = 0;  // Must be zero before calculating
+    icmp_header->checksum = compute_icmp_checksum((uint16_t*)packet, packet_size);
+
+    cout << "[DEBUG] Sending ICMP packet with payload: " << payload << endl;
+
+    // Send the packet to the destination
+    ssize_t sent = sendto(sock, packet, packet_size, 0,  (sockaddr*)&dest_addr, sizeof(dest_addr));
+    
+    if (sent < 0) {
+        perror("sendto (ICMP) failed");
+        close(sock);
+        return false;
+    }
+
+    cout << "ICMP echo request sent successfully! (" << sent << " bytes)" << endl;
+
+    // Try to receive response
+    char buffer[1024];
+    sockaddr_in from_addr{};
+    socklen_t from_len = sizeof(from_addr);
+    
+    ssize_t received = recvfrom(sock, buffer, sizeof(buffer), 0, (sockaddr*)&from_addr, &from_len);
+    
+    if (received > 0) {
+        cout << "Received ICMP response (" << received << " bytes)" << endl;
+    } else {
+        cout << "No ICMP response received (maybe not replying to pings)" << endl;
+    }
+
+    close(sock);
+    return true;
+}
+
+// This function calculates a checksum to make sure our data isn't corrupted
+uint16_t compute_icmp_checksum(uint16_t* data, int length) {
+    uint32_t sum = 0;
+    
+    // Add up all the 16-bit chunks of data
+    while (length > 1) {
+        sum += *data++;
+        length -= 2;
+    }
+    
+    // If there's one byte left, add it too
+    if (length == 1) {
+        sum += *(uint8_t*)data;
+    }
+    
+    // Add the carry bits (like when you add numbers and carry the 1)
+    sum = (sum >> 16) + (sum & 0xFFFF);
+    sum += (sum >> 16);
+    
+    // Return the one's complement (flip all the bits)
+    return (uint16_t)~sum;
 }
