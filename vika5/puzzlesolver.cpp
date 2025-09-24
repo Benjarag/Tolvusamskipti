@@ -41,6 +41,10 @@ bool probe_hidden_port(const string& ip, int port, uint32_t signature, uint8_t g
 bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signature, uint8_t group_id, int& evil_hidden_port);
 bool solve_checksum_port(const string& ip, int port, uint32_t signature, string& secret_phrase);
 unsigned short calculate_ip_checksum(unsigned short* buf, int nwords);
+
+uint16_t calculate_udp_checksum(struct iphdr* ip_hdr, struct udphdr* udp_hdr, const void* data, size_t data_len);
+unsigned short calculate_ip_checksum(unsigned short* buf, int nwords);
+
 bool knocking_port(const string& ip, int port, uint8_t group_id, int secret_hidden_port, int evil_hidden_port, const string& secret_phrase);
 
 
@@ -642,9 +646,55 @@ bool solve_checksum_port(const string& ip, int port, uint32_t signature, string&
     
     // Calculate IP checksum
     ip_header->check = calculate_ip_checksum((unsigned short*)ip_header, sizeof(struct iphdr));
+    
 
     // Inner UDP header
     struct udphdr* udp_header = (struct udphdr*)(packet + sizeof(struct iphdr));
+    udp_header->source = htons(14235); // Source port: random
+    udp_header->dest = htons(port); // Destination port: the checksum port
+    udp_header->len = htons(sizeof(struct udphdr)); // Length of UDP header (no payload)
+    udp_header->check = htons(checksum); // Set the checksum from the response
+    
+    char* data = packet + sizeof(struct iphdr) + sizeof(struct udphdr);
+    size_t data_len = 0; // length of the dummy data
+
+    int packet_size = sizeof(struct iphdr) + sizeof(struct udphdr) + data_len;
+    cout << "Sending encapsulated packet of size: " << packet_size << endl;
+    
+    cout << "[DEBUG] calculate_udp_checksum: " << udp_header->check << endl;
+    cout << "[DEBUG] ip_header->check: " << hex << ip_header->check << dec << endl;
+    cout << "[DEBUG] udp_header->check: " << hex << udp_header->check << dec << endl;
+    
+    // Properly calculate the checksum
+    udp_header->check = calculate_udp_checksum(ip_header, udp_header, data, data_len);
+    
+
+    // Send the packet as a normal UDP message
+    if (sendto(sock, packet, packet_size, 0, (sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+        perror("Send encapsulated packet failed");
+        close(sock);
+        return false;
+    }
+
+    // Wait for the secret phrase response
+    char phrase_response[1024];
+    sockaddr_in from_addr{};
+    socklen_t from_len = sizeof(from_addr);
+
+    // Wait for a response 
+    int received = recvfrom(sock, phrase_response, sizeof(phrase_response) - 1, 0, (sockaddr*)&from_addr, &from_len);
+
+    if (received > 0) {
+        phrase_response[received] = '\0';
+        secret_phrase = string(phrase_response);
+        cout << "Received secret phrase from checksum port: " << secret_phrase << endl;
+        close(sock);
+        return true;
+    } 
+    else {
+        cerr << "No response received for secret phrase." << endl;
+    }
+
 
     return false;
 }
@@ -658,6 +708,42 @@ unsigned short calculate_ip_checksum(unsigned short* buf, int nwords) {
         sum = (sum & 0xFFFF) + (sum >> 16);
     }
     return (unsigned short)(~sum);
+}
+
+uint16_t calculate_udp_checksum(struct iphdr* ip_hdr, struct udphdr* udp_hdr, const void* data, size_t data_len) {
+    // Create pseudo-header for UDP checksum calculation
+    struct {
+        uint32_t src_addr;
+        uint32_t dst_addr;
+        uint8_t zero;
+        uint8_t protocol;
+        uint16_t udp_len;
+    } pseudo_header;
+    
+    pseudo_header.src_addr = ip_hdr->saddr;
+    pseudo_header.dst_addr = ip_hdr->daddr;
+    pseudo_header.zero = 0;
+    pseudo_header.protocol = IPPROTO_UDP;
+    pseudo_header.udp_len = udp_hdr->len;
+    
+    // Calculate total length for checksum
+    size_t total_len = sizeof(pseudo_header) + sizeof(struct udphdr) + data_len;
+    vector<uint8_t> buffer(total_len);
+    
+    // Copy pseudo-header
+    memcpy(buffer.data(), &pseudo_header, sizeof(pseudo_header));
+    
+    // Copy UDP header (with checksum = 0)
+    struct udphdr udp_temp = *udp_hdr;
+    udp_temp.check = 0;
+    memcpy(buffer.data() + sizeof(pseudo_header), &udp_temp, sizeof(udp_temp));
+    
+    // Copy data if any
+    if (data && data_len > 0) {
+        memcpy(buffer.data() + sizeof(pseudo_header) + sizeof(udp_temp), data, data_len);
+    }
+    
+    return calculate_ip_checksum(reinterpret_cast<unsigned short*>(buffer.data()), total_len / 2);
 }
 
 bool probe_hidden_port(const string& ip, int port, uint32_t signature, uint8_t group_id) {
