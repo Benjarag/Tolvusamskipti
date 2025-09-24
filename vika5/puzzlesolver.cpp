@@ -45,13 +45,11 @@ bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& 
 string send_and_receive(int sock, const sockaddr_in& addr, const string& message, int timeout_sec = 2);
 int extract_port_from_response(const string& response);
 string identify_port_with_retry(const string& ip, int port, int max_retries = 3);
-bool probe_hidden_port(const string& ip, int port, uint32_t signature, uint8_t group_id);
 bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signature, uint8_t group_id, int& evil_hidden_port);
 bool solve_checksum_port(const string& ip, int port, uint32_t signature, string& secret_phrase);
 uint16_t compute_udp_checksum(const u_char *const buffer, int buffer_len);
-// unsigned short calculate_ip_checksum(unsigned short* buf, int nwords);
-
-// bool knocking_port(const string& ip, int port, uint8_t group_id, int secret_hidden_port, int evil_hidden_port, const string& secret_phrase);
+bool solve_knocking_port(const string& ip, int port, uint32_t signature, int secret_hidden_port, int evil_hidden_port, const string& secret_phrase);
+bool knock_hidden_port(const string& ip, int port, uint32_t signature, const string& secret_phrase);
 
 
 // ===== MAIN CONTROLLER =====
@@ -175,12 +173,35 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    // extract the secret phrase from the secret_phrase response
+    // the secret phrase will start with " and end with "
+    if (!secret_phrase.empty()) {
+        size_t first_quote = secret_phrase.find('"');
+        size_t last_quote = secret_phrase.rfind('"');
+        if (first_quote != string::npos && last_quote != string::npos && last_quote > first_quote) {
+            secret_phrase = secret_phrase.substr(first_quote + 1, last_quote - first_quote - 1);
+            cout << "Extracted Secret Phrase: " << secret_phrase << endl;
+        } else {
+            cerr << "Could not extract secret phrase from response." << endl;
+            return 1;
+        }
+    } else {
+        cerr << "Secret phrase is empty, cannot proceed with port knocking." << endl;
+        return 1;
+    }
 
-    // knocking_port(ip, knocking_port, group_id, signature);
+    // Finally do the knocking port
+    if (knocking_port > 0) {
+        cout << "\n=== Performing Port Knocking ===" << endl;
+        if (solve_knocking_port(ip, knocking_port, signature, secret_hidden_port, evil_hidden_port, secret_phrase)) {
+            cout << "SUCCESS: Port knocking completed!" << endl;
+        } else {
+            cerr << "FAILED: Could not complete port knocking" << endl;
+            return 1;
+        }
+    }
 
     return 0;
-
-
 }
 
 // secret function
@@ -726,8 +747,6 @@ bool solve_checksum_port(const string& ip, int port, uint32_t signature, string&
     else {
         cerr << "No response received for secret phrase." << endl;
     }
-
-
     return false;
 }
 
@@ -750,30 +769,132 @@ uint16_t compute_udp_checksum(const u_char *const buffer, int buffer_len) {
     return ~sum;
 }
 
-bool probe_hidden_port(const string& ip, int port, uint32_t signature, uint8_t group_id) {
-    cout << "[DEBUG] probe_hidden_port called for IP: " << ip << ", port: " << port << endl;
 
+bool solve_knocking_port(const string& ip, int port, uint32_t signature, int secret_hidden_port, int evil_hidden_port, const string& secret_phrase) {
+    cout << "[DEBUG] knocking_port called for IP: " << ip << ", port: " << port << endl;
+    // Knock response: Greetings! I am E.X.P.S.T.N, which stands for "Enhanced X-link Port Storage Transaction Node".
+    // What can I do for you? 
+    // - If you provide me with a list of secret ports (comma-separated), I can guide you on the exact sequence of "knocks" to ensure you score full marks.
+
+    // Starting with sending a list of secret ports
+
+    // Create UDP socket
     int sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock < 0) {
-        perror("socket");
+        perror("socket creation failed");
         return false;
     }
 
-    sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    inet_pton(AF_INET, ip.c_str(), &addr.sin_addr);
-
-    // Try sending just the signature first (as other ports expect)
-    uint32_t net_signature = htonl(signature);
-    string response = send_and_receive(sock, addr, string((char*)&net_signature, 4), 2);
-    
-    if (!response.empty()) {
-        cout << "Hidden port response: " << response << endl;
-    } else {
-        cout << "No response from hidden port (might need knocking)" << endl;
+    // Setting the timeout
+    timeval tv{};
+    tv.tv_sec = 2; // 2 seconds timeout
+    tv.tv_usec = 0;
+    if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
+        perror("setsockopt failed");
+        close(sock);
+        return false;
     }
+
+    // Setting up the sockaddr_in structure for the server
+    sockaddr_in server_addr{};
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(port);
+    inet_pton(AF_INET, ip.c_str(), &server_addr.sin_addr);
+
+    // Send the list of secret ports
+    string port_list = to_string(secret_hidden_port) + "," + to_string(evil_hidden_port);
+    cout << "Sending port list to knocking port: " << port_list << endl;
+    string response = send_and_receive(sock, server_addr, port_list, 2);
+
+    cout << "[DEBUG] response from sending port list: " << response << endl;
     
+    if (response.empty()) {
+        cerr << "No response received from knocking port after sending port list." << endl;
+        close(sock);
+        return false;
+    }
+
+    // How to use E.X.P.S.T.N?
+    // 1. Each "knock" must be paired with boqth a secret phrase and your unique S.E.C.R.E.T signature.
+    // 2. The correct format to send a knock: First, 4 bytes containing your S.E.C.R.E.T signature, followed by the secret phrase.
+    
+    
+    // Tip: To discover the secret ports and their associated phrases, start by solving challenges on the ports detected using your port scanner. Happy hunting!
+    
+    // Now we take this list into a vector and loop over it
+    vector<int> knock_sequence;
+    size_t start = 0, end = 0;
+    while ((end = response.find(',', start)) != string::npos) {
+        int port = stoi(response.substr(start, end - start));
+        knock_sequence.push_back(port);
+        start = end + 1;
+    }
+    if (start < response.size()) {
+        knock_sequence.push_back(stoi(response.substr(start)));
+    }
+
+    cout << "[DEBUG] Knock sequence: ";
+    for (int p : knock_sequence) cout << p << " ";
+    cout << endl;
+
+    // Knock on each port using probe_hidden_port
+    for (int knock_port : knock_sequence) {
+        cout << "[DEBUG] Knocking on port: " << knock_port << endl;
+        knock_hidden_port(ip, knock_port, signature, secret_phrase);
+    }
+
+    // After completing the knocking sequence, we should receive a final confirmation message
+    response = send_and_receive(sock, server_addr, "FINALIZE", 2);
+    if (!response.empty()) {
+        cout << "Final response from knocking port: " << response << endl;
+        close(sock);
+        return true;
+    } else {
+        cerr << "No final response received from knocking port." << endl;
+    }
     close(sock);
+
     return false;
+}
+
+
+bool knock_hidden_port(const string& ip, int port, uint32_t signature, const string& secret_phrase) {
+    cout << "[DEBUG] knock_hidden_port called for IP: " << ip << ", port: " << port << endl;
+
+    // Create UDP socket
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock < 0) {
+        perror("socket creation failed");
+        return false;
+    }
+
+    // Setting the timeout
+    timeval tv{};
+    tv.tv_sec = 2; // 2 seconds timeout
+    tv.tv_usec = 0;
+    if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
+        perror("setsockopt failed");
+        close(sock);
+        return false;
+    }
+
+    // Setting up the sockaddr_in structure for the server
+    sockaddr_in server_addr{};
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(port);
+    inet_pton(AF_INET, ip.c_str(), &server_addr.sin_addr);
+
+    // Build the knock message
+    char message[4 + secret_phrase.size()];
+    uint32_t net_signature = htonl(signature);
+    memcpy(message, &net_signature, 4); // first 4 bytes are the signature in network byte order
+    strcpy(message + 4, secret_phrase.c_str()); // followed by the secret phrase
+
+    cout << "Sending knock message to port " << port << endl;
+    string response = send_and_receive(sock, server_addr, string(message, sizeof(message)), 2);
+
+    cout << "[DEBUG] response from knocking on port " << port << ": " << response << endl;
+
+    close(sock);
+    return true;
 }
