@@ -339,6 +339,7 @@ bool solve_secret_port(const string& ip, int port, uint8_t& group_id, uint32_t& 
     // this was done with the reference variables passed in
 }
 
+// Function to extract port number from server response
 int extract_port_from_response(const string& response) {
     // Simple parsing to find the port number in the response string
     for (size_t i = 0; i < response.size(); i++) {
@@ -359,6 +360,7 @@ int extract_port_from_response(const string& response) {
     return -1; // could not find port
 }
 
+// Function to send a message and wait for a response with timeout
 string send_and_receive(int sock, const sockaddr_in& addr, const string& message, int timeout_sec) {
     timeval tv{};
     tv.tv_sec = timeout_sec;
@@ -380,6 +382,7 @@ string send_and_receive(int sock, const sockaddr_in& addr, const string& message
     return "";
 }
 
+// Function to identify port type with retries
 string identify_port_with_retry(const string& ip, int port, int max_retries) {
     for (int attempt = 1; attempt <= max_retries; ++attempt) {
         int sock = socket(AF_INET, SOCK_DGRAM, 0); // Create UDP socket
@@ -414,6 +417,8 @@ string identify_port_with_retry(const string& ip, int port, int max_retries) {
     return ""; // All attempts failed
 }
 
+
+// Function to solve the Evil port puzzle using raw sockets
 bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signature, uint8_t group_id, int& evil_hidden_port) {
     cout << "[DEBUG] solve_evil_port called for IP: " << ip << ", port: " << port << endl;
     
@@ -558,7 +563,8 @@ bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signat
     return success;
 }
 
-bool solve_checksum_port(const string& ip, int port, uint32_t signature, string& secret_phrase) {
+// Function to solve the Checksum port puzzle
+bool solve_checksum_port(const string& ip, int port, uint32_t signature, string& secret_phrase) { 
     cout << "[DEBUG] solve_checksum_port called for IP: " << ip << ", port: " << port << endl;
 
     // Create UDP socket
@@ -736,6 +742,7 @@ bool solve_checksum_port(const string& ip, int port, uint32_t signature, string&
     return false;
 }
 
+// Function to compute UDP checksum
 uint16_t compute_udp_checksum(const u_char *const buffer, int buffer_len) {
     u_int32_t sum = 0;
     
@@ -755,7 +762,7 @@ uint16_t compute_udp_checksum(const u_char *const buffer, int buffer_len) {
     return ~sum;
 }
 
-
+// Function to solve the Knocking port puzzle
 bool solve_knocking_port(const string& ip, int port, uint32_t signature, int secret_hidden_port, int evil_hidden_port, const string& secret_phrase) {
     cout << "[DEBUG] knocking_port called for IP: " << ip << ", port: " << port << endl;
     // Knock response: Greetings! I am E.X.P.S.T.N, which stands for "Enhanced X-link Port Storage Transaction Node".
@@ -842,6 +849,7 @@ bool solve_knocking_port(const string& ip, int port, uint32_t signature, int sec
     return false;
 }
 
+// Function to knock on a hidden port
 bool knock_hidden_port(const string& ip, int port, uint32_t signature, const string& secret_phrase) {
     cout << "[DEBUG] knock_hidden_port called for IP: " << ip << ", port: " << port << endl;
 
@@ -883,6 +891,7 @@ bool knock_hidden_port(const string& ip, int port, uint32_t signature, const str
     return true;
 }
 
+// Function to send ICMP echo request for bonus points
 bool send_icmp_bonus(const string& ip, uint8_t group_id) {
     cout << "Sending ICMP echo request to " << ip << " with group ID: " << (int)group_id << endl;
 
@@ -958,7 +967,7 @@ bool send_icmp_bonus(const string& ip, uint8_t group_id) {
     return true;
 }
 
-// This function calculates a checksum to make sure our data isn't corrupted
+// Function to calculate a checksum to make sure our data isn't corrupted
 uint16_t compute_icmp_checksum(uint16_t* data, int length) {
     uint32_t sum = 0;
     
