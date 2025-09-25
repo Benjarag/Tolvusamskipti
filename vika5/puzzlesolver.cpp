@@ -484,7 +484,8 @@ bool solve_evil_port_with_raw_socket(const string& ip, int port, uint32_t signat
     ip_header->protocol = IPPROTO_UDP; // Protocol: UDP
 
     // Source and destination IP addresses
-    ip_header->saddr = inet_addr("172.29.175.97");
+    // ip_header->saddr = inet_addr("172.29.175.97");
+    ip_header->saddr = recv_addr.sin_addr.s_addr; // Source IP address (the one we bound to)
 
     // Destination IP address
     ip_header->daddr = inet_addr(ip.c_str());
