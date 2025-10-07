@@ -1,0 +1,18 @@
+tsam-groupX-submission.zip
+├── README.txt
+├── Makefile
+├── tsamgroupX (executable - your server)
+├── tsamclient (executable - your client)
+├── src/
+│   ├── server.cpp (or server.c)
+│   ├── client.cpp (or client.c)
+│   ├── protocol.cpp (or protocol.c) - shared protocol functions
+│   ├── networking.cpp (or networking.c) - shared networking functions
+│   └── utils.cpp (or utils.c) - shared utility functions
+├── include/ (optional, for C++)
+│   ├── protocol.h
+│   ├── networking.h
+│   └── utils.h
+└── documentation/ (optional)
+    ├── wireshark_trace.pcapng (for requirement 1b)
+    └── sample_logs.txt (for bonus points evidence)
