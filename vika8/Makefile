@@ -1,8 +1,9 @@
 CXX = g++
-CXXFLAGS = -Wall -g -std=c++11
+INCDIR = include
+CXXFLAGS = -Wall -g -std=c++11 -I$(INCDIR)
 # For C use: CC = gcc, CFLAGS = -Wall -g -std=c99
 
-SERVER_TARGET = tsamgroup21
+SERVER_TARGET = tsamgroup29
 CLIENT_TARGET = tsamclient
 SRCDIR = src
 SERVER_SRC = $(SRCDIR)/server.cpp
