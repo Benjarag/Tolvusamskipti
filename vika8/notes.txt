@@ -1,0 +1,13 @@
+
+SKELETON KODI:
+breyta select yfir í poll
+
+client:
+notar connect
+
+kveikja a server
+kveikja a client
+connecta við server 5001
+
+forward message
+receive message
