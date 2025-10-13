@@ -1,0 +1,28 @@
+TSAM Client starting (Group 29) ...
+[2025-10-13 17:40:45] Connected to server 127.0.0.1:4029
+
+=== TSAM Client Commands ===
+SENDMSG,GROUP_ID,<message>   Send message to group (comma-separated)
+GETMSG                Get messages for your group
+LISTSERVERS           List connected servers
+HELP                  Show this help
+QUIT                  Exit client
+=============================
+tsamgroup29> [2025-10-13 17:40:45] Sending: GETMSG
+[2025-10-13 17:40:45] Server response: NO_MESSAGES
+tsamgroup29> [2025-10-13 17:40:45] Sending: LISTSERVERS
+[2025-10-13 17:40:45] Server response: SERVERS
+tsamgroup29> [2025-10-13 17:40:45] Sending: SENDMSG,A5_29,Hello message nr 1
+[2025-10-13 17:40:45] Server response: MESSAGE_SENT
+tsamgroup29> [2025-10-13 17:40:45] Sending: SENDMSG,A5_29,Hello message nr 2
+[2025-10-13 17:40:45] Server response: MESSAGE_SENT
+tsamgroup29> [2025-10-13 17:40:45] Sending: SENDMSG,A5_29,Hello message nr 3
+[2025-10-13 17:40:45] Server response: MESSAGE_SENT
+tsamgroup29> [2025-10-13 17:40:45] Sending: GETMSG
+[2025-10-13 17:40:45] Server response: MESSAGE: Hello message nr 1
+tsamgroup29> [2025-10-13 17:40:45] Sending: GETMSG
+[2025-10-13 17:40:45] Server response: MESSAGE: Hello message nr 2
+tsamgroup29> [2025-10-13 17:40:45] Sending: GETMSG
+[2025-10-13 17:40:45] Server response: MESSAGE: Hello message nr 3
+tsamgroup29> [2025-10-13 17:40:45] Disconnected from server
+Exiting TSAM Client.

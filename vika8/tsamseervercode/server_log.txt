@@ -1,0 +1,26 @@
+Starting TSAM Server A5_29 on port 4029
+Press Ctrl+C to stop...
+[2025-10-13 17:40:45] Server A5_29 listening on port 4029
+[2025-10-13 17:40:45] New connection accepted from 127.0.0.1:55410
+[2025-10-13 17:40:45] Handler thread started for fd=4
+[2025-10-13 17:40:45] Connection identified as client on fd=4
+[2025-10-13 17:40:45] Sent to client: NO_MESSAGES
+[2025-10-13 17:40:45] Received from connection client LISTSERVERS
+[2025-10-13 17:40:45] Sent reply: SERVERS
+[2025-10-13 17:40:45] Received from connection client SENDMSG,A5_29,Hello message nr 1
+[2025-10-13 17:40:45] Stored message from client for group A5_29: Hello message nr 1
+[2025-10-13 17:40:45] Sent reply: MESSAGE_SENT
+[2025-10-13 17:40:45] Received from connection client SENDMSG,A5_29,Hello message nr 2
+[2025-10-13 17:40:45] Stored message from client for group A5_29: Hello message nr 2
+[2025-10-13 17:40:45] Sent reply: MESSAGE_SENT
+[2025-10-13 17:40:45] Received from connection client SENDMSG,A5_29,Hello message nr 3
+[2025-10-13 17:40:45] Stored message from client for group A5_29: Hello message nr 3
+[2025-10-13 17:40:45] Sent reply: MESSAGE_SENT
+[2025-10-13 17:40:45] Received from connection client GETMSG
+[2025-10-13 17:40:45] Sent reply: MESSAGE: Hello message nr 1
+[2025-10-13 17:40:45] Received from connection client GETMSG
+[2025-10-13 17:40:45] Sent reply: MESSAGE: Hello message nr 2
+[2025-10-13 17:40:45] Received from connection client GETMSG
+[2025-10-13 17:40:45] Sent reply: MESSAGE: Hello message nr 3
+[networking] read_exact(header) EOF (peer closed)
+[2025-10-13 17:40:45] Connection disconnected fd=4
