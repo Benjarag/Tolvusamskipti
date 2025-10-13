@@ -124,6 +124,9 @@ tcpdump: listening on any, link-type LINUX_SLL2 (Linux cooked v2)
 - `tsam_capture.pcap` — packet capture recorded with tcpdump
 - `tsamclient` — built client executable (example)
 - `tsamgroup29` — built server executable (example)
+- `run_demo.sh` — optional helper script to build the project, run a short scripted client session and save `client_log.txt` and `server_log.txt` (capture is disabled by default; use `--capture` to enable tcpdump)
+- `client_log.txt` — example full client transcript from a scripted demo
+- `server_log.txt` — example full server transcript from the same demo
 
 If any filenames above differ in your workspace (for example different source file extensions or binary names), use `ls` to list the directory and adapt the commands accordingly.
 
