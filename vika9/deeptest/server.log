@@ -1,0 +1,15 @@
+Starting TSAM Server A5_29 on port 4031
+Press Ctrl+C to stop...
+[2025-10-12 23:28:04] Server A5_29 listening on port 4031
+[2025-10-12 23:28:04] Sent HELO to peer at 130.208.246.98:5001
+[networking] read_exact(body) EOF (peer closed)
+[2025-10-12 23:30:49] Peer response: 
+[2025-10-12 23:30:49] New connection accepted from 127.0.0.1:50110
+[2025-10-12 23:30:49] Handler thread started for fd=4
+[networking] read_exact(header) EOF (peer closed)
+[2025-10-12 23:30:49] Connection closed before any data from fd=4
+[2025-10-12 23:30:49] Handler thread started for fd=5
+[2025-10-12 23:30:49] Connection identified as client on fd=5
+[2025-10-12 23:30:49] Sent to client: SERVERS,instructor
+[networking] read_exact(header) EOF (peer closed)
+[2025-10-12 23:30:49] Connection disconnected fd=5
