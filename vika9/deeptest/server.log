@@ -13,3 +13,56 @@ Press Ctrl+C to stop...
 [2025-10-12 23:30:49] Sent to client: SERVERS,instructor
 [networking] read_exact(header) EOF (peer closed)
 [2025-10-12 23:30:49] Connection disconnected fd=5
+
+
+SERVERS,A5_29,130.208.246.98,4029;
+
+Instr_1,130.208.246.98,5001
+;A5_5,52.213.117.35,4005;
+A5_92,130.208.246.98,4092;
+ORACLE,130.208.246.98,5003;
+A5_44,130.208.246.98,4044;
+A5_60,130.208.246.98,4060;
+A5_52,130.208.246.98,4052;
+NUMBER,130.208.246.98,5004;
+
+[2025-10-21 23:45:14] Server response: SERVERS,A5_29,130.208.246.98,4029;
+
+A5_3,130.208.246.98,4003;
+A5_5,52.213.117.35,4005
+;A5_92,130.208.246.98,4092;
+A5_44,130.208.246.98,4044;
+A5_60,130.208.246.98,4060;
+A5_52,130.208.246.98,4052;
+
+
+
+
+SERVERS,A5_29,130.208.246.98,4029;
+
+A5_3,130.208.246.98,4003;
+A5_5,52.213.117.35,4005;
+A5_92,130.208.246.98,4092;
+A5_13,85.220.6.133,4013;
+A5_44,130.208.246.98,4044;
+A5_60,130.208.246.98,4060;
+A5_52,130.208.246.98,4052;
+
+
+
+FIXESFIXESFIXES:!!!!!!!!!!::::::::!:!:!:!:!:!:!:!:!:!:!:!::!:!!:!:!:!:!::!:!:!:!:!:!:!:!:!!:!::!::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!:
+
+fix so that we only drop instructor servers from connected to known when we there is another student server that can replace it. If there are for example 6 student servers that we are connected to, then we should also try to have 2 instructor servers for that short time.
+
+
+
+
+
+        else if (command == "LISTSERVERS") {
+            std::string list = "SERVERS,";
+            
+            // Include ourselves first
+            list += group_id + "," + "130.208.246.98" + "," + std::to_string(server_port) + ";";
+            
+
+fix this so we dont hardcode anything, find ip, find name, find port
