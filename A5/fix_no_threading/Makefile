@@ -1,0 +1,40 @@
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall -Wextra -pthread
+SOURCES = server.cpp client.cpp protocol.cpp networking.cpp test_peer.cpp
+SERVER_OBJ = server.o protocol.o networking.o
+CLIENT_OBJ = client.o protocol.o networking.o
+TEST_PEER_OBJ = test_peer.o protocol.o networking.o
+TARGET_SERVER = tsamgroup29
+TARGET_CLIENT = tsamclient
+TARGET_TEST_PEER = test_peer
+
+all: $(TARGET_SERVER) $(TARGET_CLIENT) $(TARGET_TEST_PEER)
+
+$(TARGET_SERVER): $(SERVER_OBJ)
+	$(CXX) $(CXXFLAGS) -o $(TARGET_SERVER) $(SERVER_OBJ)
+
+$(TARGET_CLIENT): $(CLIENT_OBJ)
+	$(CXX) $(CXXFLAGS) -o $(TARGET_CLIENT) $(CLIENT_OBJ)
+
+$(TARGET_TEST_PEER): $(TEST_PEER_OBJ)
+	$(CXX) $(CXXFLAGS) -o $(TARGET_TEST_PEER) $(TEST_PEER_OBJ)
+
+server.o: server.cpp protocol.h networking.h
+	$(CXX) $(CXXFLAGS) -c server.cpp
+
+client.o: client.cpp protocol.h networking.h
+	$(CXX) $(CXXFLAGS) -c client.cpp
+
+test_peer.o: test_peer.cpp protocol.h networking.h
+	$(CXX) $(CXXFLAGS) -c test_peer.cpp
+
+protocol.o: protocol.cpp protocol.h
+	$(CXX) $(CXXFLAGS) -c protocol.cpp
+
+networking.o: networking.cpp networking.h protocol.h
+	$(CXX) $(CXXFLAGS) -c networking.cpp
+
+clean:
+	rm -f *.o $(TARGET_SERVER) $(TARGET_CLIENT) $(TARGET_TEST_PEER)
+
+.PHONY: all clean

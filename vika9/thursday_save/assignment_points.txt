@@ -1,0 +1,118 @@
+Assignment
+1. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 100 points
+Submit your code together with a README (text file) and a Makefile as a single zip file.
+Any additional files and information (wireshark traces, parts of log files, etc.) must be clearly
+named and listed in the README file stating which of the following points or bonus points
+you expect to get.
+
+(a) (40 points) Implement client and server as described above. All local commands to the
+server must be implemented by a separate client over the network. The server must neither
+accept nor wait for user input.
+
+Already submited in bonus A and B submission. 
+    
+
+(b) (10 points) Provide a wireshark trace of communication between your client and server
+for all commands implemented in the client-to-server protocol
+
+Already submited in bonus A and B submission. 
+
+
+
+(c) (10 points) Have been successfully connected to by someone else’s server. That means,
+the other server needs to initiate the connection (call connect) and your server accept it
+(call accept). (Provide timestamped log of accepting an incoming connection, showing
+source IP and port)
+
+Here is one example of it:
+[2025-10-19 18:33:38] Received from connection peer: A5_60: HELO,A5_60
+[2025-10-19 18:33:38] Received HELO from A5_60
+[2025-10-19 18:33:38] Sent HELO response: HELO,A5_29
+[2025-10-19 18:33:38] Sent SERVERS response: SERVERS,A5_29,130.208.246.98,4029;
+[2025-10-19 18:33:38] Received from connection peer: A5_60: SERVERS,A5_60,130.208.246.98,4060;Instr_2,130.208.246.98,5002;Instr_1,130.208.246.98,5001;A5_52,157.157.113.89,59724;A5_666,130.208.246.98,51914;
+
+Note:
+When we have already connected to a peer, we suppress the HELO/SERVERS response to avoid echo loops,
+but we still process the HELO message to update peer information and track connectivity. 
+We also periodically send HELO messages (every 150 seconds) as keepalive checks.
+
+
+
+(d) (10 points) Successfully receive messages (not commands!) from at least 2 other groups.
+(Provide timestamped log)
+Here is one example of it:
+in the logs:
+[2025-10-23 14:09:44] Sent GETMSGS to peer A5_12 for group: 
+[2025-10-23 14:09:44] Received from connection peer: A5_12: SENDMSG,A5_29,A5_12,Sorry kæri vinur,það var eitthver sem stal mínu porti,þannig ég stal þínu!
+[2025-10-23 14:09:44] Stored message for group A5_29 from A5_12
+[2025-10-23 14:09:44] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 14:20:33] Received from connection client: GETMSG
+[2025-10-23 14:20:33] Sent reply to client: MESSAGE: From: A5_12 Msg: Sorry kæri vinur,það var eitthver sem stal mínu porti,þannig ég stal þínu!
+
+
+
+(e) (10 points) Successfully send messages (not commands!) to at least 2 other groups. (Provide timestamped log)
+
+Tier 1 SENDMSG example:
+[2025-10-23 01:15:16] Received from connection client: SENDMSG,ORACLE,BUT I want to
+[2025-10-23 01:15:16] Stored message from A5_29 for group ORACLE: BUT I want to
+[2025-10-23 01:15:16] TIER 1: Forwarded SENDMSG directly to destination ORACLE with hops - DELETING from queue
+
+
+Tier 2 forwarding example:
+[2025-10-23 01:35:48] Received from connection client: SENDMSG,ORACLE,HALLO message haha
+[2025-10-23 01:35:48] Stored message from A5_29 for group ORACLE: HALLO message haha
+[2025-10-23 01:35:48] TIER 2: Destination ORACLE known but not connected - forwarded to Instr_1 with hops - DELETING from queue
+
+Tier 2 keeping in queue example:
+[2025-10-22 15:07:41] Received from connection peer: A5_3: SENDMSG,A5_13,A5_3,To A5_13: Pls send us a msg
+[2025-10-22 15:07:41] Stored message for group A5_13 from A5_3
+[2025-10-22 15:07:41] TIER 2: Destination A5_13 known but Instr_1 not connected - KEEPING in queue
+[-------------------]
+[2025-10-22 15:12:40] Received GETMSGS for group: A5_13
+[2025-10-22 15:12:40] Sent SENDMSG to peer requesting messages: SENDMSG,A5_13,A5_3,To A5_13: Pls send us a msg (for group A5_13)
+
+Tier 3 keeping in queue example:
+[2025-10-23 07:18:33] Received from connection peer: ORACLE: SENDMSG,A5_123,ORACLE,
+
+The Internet Oracle has pondered your question deeply. Your question was:
+  Did you say, "Watch the sheeps," or "Wash the sheets"? How can I know
+  which is which? 
+And in response, thus spake the Oracle:
+  The sheep are the ones that object when you try to make them fit into
+  the washing machine. 
+[2025-10-23 07:18:33] Stored message for group A5_123 from ORACLE
+[2025-10-23 07:18:33] TIER 3: Destination A5_123 unknown - KEEPING in queue for GETMSGS retrieval
+[-------------------]
+[2025-10-23 08:20:13] Received from connection peer: A5_44: GETMSGS,A5_123
+[2025-10-23 08:20:13] Received GETMSGS for group: A5_123
+[2025-10-23 08:20:13] Sent SENDMSG to peer requesting messages: SENDMSG,A5_123,ORACLE,
+
+The Internet Oracle has pondered your question deeply. Your question was:
+  Did you say, "Watch the sheeps," or "Wash the sheets"? How can I know
+  which is which? 
+And in response, thus spake the Oracle:
+  The sheep are the ones that object when you try to make them fit into
+  the washing machine.  (for group A5_123)
+
+
+
+(f) (10 points) Code is submitted as a single zip file, with README and Makefile. (Do
+not include hg/git/etc. repositories or other hidden files!) The README describes how
+to compile and run the code, which OS you developed on, lists the commands that are
+implemented in the client and server and describes the behaviour of the server in response
+to these commands and potentially other external events. You should especially describe
+any additional commands or behaviour of your server that is not list here in the assignment
+description.
+
+
+(g) (10 points) Code is well structured and documented. The server produces a readable
+log file showing all received and sent commands and other useful information about the
+internal state and behaviour of the server.
+Note, that there is difference between message and command. Messages are sent between
+groups using the SENDMSG command and only count as received when the receipient fetched
+them from their server using their client.
+
+I believe my code is well structured and documented.
+I am not sure if I will include the logs because they are quite large and many.

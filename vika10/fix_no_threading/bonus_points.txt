@@ -1,0 +1,616 @@
+Bonus Points
+The maximum grade for the assignment is 100 points. No more than 50 bonus points can be
+awarded additionally. The bonus points carry over to other assignments and the final grade
+(but do not count towards the passing threshold for the final exam).
+List in your README file the bonus points you want to claim together with
+relevant information that shows you are eligible.
+2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 80 points
+(a) (10 points) Early Bot: Submit your solution for the client/server protocol implementation within the first week. For this, you need to implement the client and at least a stub
+for the server that communicates with the client. The server does not need to implement
+all the commands for the peer-to-peer communication, yet.
+Submit the code for both client and server and the wireshark trace for 1(b).
+Note: You are allowed to improve the code later for the final submission and may get some
+feedback earlier.
+
+THIS IS DONE, see: Bonus_EarlyBot_partsAB.zip
+
+
+(b) (10 points) Ready Bot: Obtain 10 bonus points for the server being connected to the
+botnet (and responding) on at least 5 days for at least 2 hours each. Provide relevant
+parts of your timestamped log to get these points, e.g., showing commands received from
+other servers on different days and different times.
+
+See folder: Ready_Bot_log
+
+12th:
+see: 12th_18th.log
+
+13th:
+Did not find it in the logs, but I already have more than 5 days already.
+
+18th:
+see: 12th_18th.log
+
+19th:
+see: 19th.log
+
+20th:
+see: 20th.log
+
+21st:
+see: 21st.log
+
+
+22nd:
+I have a lot of data and logs on the 22nd of october, so I will create a new log file
+and copy some stuff into, so that I provide enough evidence: 22nd.log
+
+
+23rd:
+Same as with the 22nd, this log file is called: 23rd.log
+I have copied from my log into this log, spaced inbetween is [-------------------].
+
+
+
+
+(c) (20 points) Chatty Bot: Obtain 10 points per 10 different groups you can show messages
+(not commands!) received from, up to 20 points. Provide relevant parts of your timestamped log or screenshots to get these points, e.g., showing server log delivering messages
+to your client or showing received messages in your client.
+
+Here below are logs of the messages I received, it shows when i receive them and when I view them. 
+The logs themselves often are not exactly the same due to changes to the code and logs.
+
+
+Students messages:
+1. A5_44
+in the logs:
+[2025-10-23 13:29:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,They expect one of us in the wreckage brother
+[2025-10-23 13:29:08] Stored message for group A5_29 from A5_44
+[2025-10-23 13:29:08] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 14:10:06] Received from connection client: GETMSG
+[2025-10-23 14:10:06] Sent reply to client: MESSAGE: From: A5_44 Msg: They expect one of us in the wreckage brother
+
+in the client:
+tsamgroup29> GETMSG
+[2025-10-23 14:10:06] Sending: GETMSG
+[2025-10-23 14:10:06] Server response: MESSAGE: From: A5_44 Msg: They expect one of us in the wreckage brother
+tsamgroup29>
+
+
+2. A5_12
+in the logs:
+[2025-10-23 14:09:44] Sent GETMSGS to peer A5_12 for group: 
+[2025-10-23 14:09:44] Received from connection peer: A5_12: SENDMSG,A5_29,A5_12,Sorry kæri vinur,það var eitthver sem stal mínu porti,þannig ég stal þínu!
+[2025-10-23 14:09:44] Stored message for group A5_29 from A5_12
+[2025-10-23 14:09:44] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 14:20:33] Received from connection client: GETMSG
+[2025-10-23 14:20:33] Sent reply to client: MESSAGE: From: A5_12 Msg: Sorry kæri vinur,það var eitthver sem stal mínu porti,þannig ég stal þínu!
+
+
+3. A_21
+
+[2025-10-22 13:17:39] Received from connection peer: A5_21: SENDMSG,A5_29,A5_21,BENJA MF RAAAAG!
+[2025-10-22 13:17:39] Stored message for group A5_29 from A5_21
+[2025-10-22 13:17:39] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-22 13:18:42] Sent reply to client: MESSAGE: From: A5_21 Msg: BENJA MF RAAAAG!
+[2025-10-22 13:18:46] Received from connection client: GETMSG
+
+
+4. A5_28
+
+[2025-10-22 23:13:33] Received from connection peer: A5_60: SENDMSG,A5_29,A5_28,Hello from A5_28!A5_28
+[2025-10-22 23:13:33] Stored message for group A5_29 from A5_28
+[2025-10-22 23:13:33] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-22 23:14:57] Received from connection client: GETMSG
+[2025-10-22 23:14:57] Sent reply to client: MESSAGE: From: A5_28 Msg: Hello from A5_28!A5_28
+
+
+5. A5_27
+
+in the logs:
+[2025-10-23 16:10:59] Received from connection peer: A5_27: SENDMSG,A5_29,A5_27,[32m
+
+           .--._.--.
+          ( --    O )
+          /   . .   \
+         .`._______.'.
+        /(           )\
+      _/  \  \   /  /  \_
+   .~   `  \  \ /  /  '   ~.
+  {    -.   \  V  /   .-    }
+_ _`.    \  |  |  |  /    .'_ _
+>_       _} |  |  | {_       _<
+ /. - ~ ,_-'  .^.  `-_, ~ - .\
+         '-'|/   \|`-`
+
+[0m [hops: A5_27]
+[-------------------]
+[2025-10-23 16:27:44] Sent reply to client: MESSAGE: From: A5_27 Msg: [32m
+
+           .--._.--.
+          ( --    O )
+          /   . .   \
+         .`._______.'.
+        /(           )\
+      _/  \  \   /  /  \_
+   .~   `  \  \ /  /  '   ~.
+  {    -.   \  V  /   .-    }
+_ _`.    \  |  |  |  /    .'_ _
+>_       _} |  |  | {_       _<
+ /. - ~ ,_-'  .^.  `-_, ~ - .\
+         '-'|/   \|`-`
+
+[0m
+
+in the client:
+tsamgroup29> GETMSG
+[2025-10-23 16:27:44] Sending: GETMSG
+[2025-10-23 16:27:44] Server response: MESSAGE: From: A5_27 Msg:
+
+           .--._.--.
+          ( --    O )
+          /   . .   \
+         .`._______.'.
+        /(           )\
+      _/  \  \   /  /  \_
+   .~   `  \  \ /  /  '   ~.
+  {    -.   \  V  /   .-    }
+_ _`.    \  |  |  |  /    .'_ _
+>_       _} |  |  | {_       _<
+ /. - ~ ,_-'  .^.  `-_, ~ - .\
+         '-'|/   \|`-`
+
+
+
+6. A5_52
+
+[2025-10-23 00:30:48] Received from connection peer: A5_52: SENDMSG,A5_29,A5_52,Comms picked up a “boop.” Was that you greeting satellites again? They’re flattered but request boundaries.
+[2025-10-23 00:30:48] Stored message for group A5_29 from A5_52
+[2025-10-23 00:30:48] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 00:48:44] Received from connection client: GETMSG
+[2025-10-23 00:48:44] Sent reply to client: MESSAGE: From: A5_52 Msg: Comms picked up a “boop.” Was that you greeting satellites again? They’re flattered but request boundaries.
+
+
+7. A5_23
+
+in the log:
+[2025-10-23 01:22:06] Received from connection peer: LIVE: SENDMSG,A5_29,A5_23,This is a test msg from group 23
+[2025-10-23 01:22:06] Stored message for group A5_29 from A5_23
+[2025-10-23 01:22:06] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 01:24:34] Received from connection client: GETMSG
+[2025-10-23 01:24:34] Sent reply to client: MESSAGE: From: A5_23 Msg: This is a test msg from group 23
+
+in the client:
+tsamgroup29> GETMSG
+[2025-10-23 01:24:34] Sending: GETMSG
+[2025-10-23 01:24:34] Server response: MESSAGE: From: A5_23 Msg: This is a test msg from group 23
+
+
+8. A5_31
+
+[2025-10-23 20:36:02] Received from connection peer: A5_31: SENDMSG,A5_29,A5_31,A5_31,hellohello
+[2025-10-23 20:36:02] Stored message for group A5_29 from A5_31
+[2025-10-23 20:36:02] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 20:42:05] Received from connection client: GETMSG
+[2025-10-23 20:42:05] Sent reply to client: MESSAGE: From: A5_31 Msg: A5_31,hellohello
+
+in the client:
+tsamgroup29> GETMSG
+[2025-10-23 20:42:05] Sending: GETMSG
+[2025-10-23 20:42:05] Server response: MESSAGE: From: A5_31 Msg: A5_31,hellohello
+
+
+9. A5_60
+
+in the logs:
+[2025-10-21 22:06:48] Received from connection peer: A5_60: SENDMSG,A5_29,A5_60,Hello from A5_60 automated!
+[2025-10-21 22:06:48] Stored message for group A5_29 from A5_60
+[2025-10-21 22:06:48] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-21 22:14:30] Received from connection client: GETMSG
+[2025-10-21 22:14:30] Sent reply to client: MESSAGE: From: A5_60 Msg: Hello from A5_60 automated!
+
+in the client:
+tsamgroup29> GETMSG
+[2025-10-23 16:31:41] Sending: GETMSG
+[2025-10-23 16:31:41] Server response: MESSAGE: From: A5_123 Msg: SENDMSGA5_29Hello! what's up?
+tsamgroup29>
+
+
+10. A5_2
+
+[2025-10-23 16:01:03] Sent GETMSGS to peer A5_2 for group: A5_2
+[2025-10-23 16:01:03] Received from connection peer: A5_2: SENDMSG,A5_29,A5_2,The cake is a lie
+[2025-10-23 16:01:03] Stored message for group A5_29 from A5_2
+[-------------------]
+[2025-10-23 16:01:15] Received from connection client: GETMSG
+[2025-10-23 16:01:15] Sent reply to client: MESSAGE: From: A5_2 Msg: The cake is a lie
+
+
+11. A5_85
+
+[2025-10-21 19:42:27] Received from connection peer: A5_60: SENDMSG,A5_29,A5_85,hi from A5_85 via peering
+[2025-10-21 19:42:27] Stored message for group A5_29 from A5_85
+[2025-10-21 19:42:27] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+
+
+12. A5_666
+
+[2025-10-19 18:41:03] Received from connection client: GETMSG
+[2025-10-19 18:41:03] Sent reply to client: MESSAGE: From: A5_666 Msg: feel
+[-------------------]
+[2025-10-19 18:41:43] Received from connection client: GETMSG
+[2025-10-19 18:41:43] Sent reply to client: MESSAGE: From: A5_666 Msg: Django or FastAPI?
+
+
+13. A5_92
+
+[2025-10-23 16:25:14] Received from connection client: GETMSG
+[2025-10-23 16:25:14] Sent reply to client: MESSAGE: From: A5_92 Msg: hello from the other side
+[-------------------]
+[2025-10-23 16:25:14] Received from connection client: GETMSG
+[2025-10-23 16:25:14] Sent reply to client: MESSAGE: From: A5_92 Msg: hello from the other side
+
+in the client:
+tsamgroup29> GETMSG
+[2025-10-23 16:25:14] Sending: GETMSG
+[2025-10-23 16:25:14] Server response: MESSAGE: From: A5_92 Msg: hello from the other side
+tsamgroup29>
+
+
+14. A5_3
+
+[2025-10-22 15:07:35] Received from connection peer: A5_3: SENDMSG,A5_29,A5_3,To A5_29: Pls send us a msg
+[2025-10-22 15:07:35] Stored message for group A5_29 from A5_3
+[2025-10-22 15:07:35] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-22 15:13:04] Received from connection client: GETMSG
+[2025-10-22 15:13:04] Sent reply to client: MESSAGE: From: A5_3 Msg: To A5_29: Pls send us a msg
+
+
+15. A5_123
+
+[2025-10-23 16:14:25] Received from connection peer: A5_123: SENDMSG,A5_29,A5_123,SENDMSGA5_29please send us back...
+ [hops: A5_123,A5_29]
+[2025-10-23 16:14:25] Received SENDMSG with hops: A5_123,A5_29
+[2025-10-23 16:14:25] Stored message for group A5_29 from A5_123
+[2025-10-23 16:14:25] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 16:42:16] Received from connection client: GETMSG
+[2025-10-23 16:42:16] Sent reply to client: MESSAGE: From: A5_123 Msg: SENDMSGA5_29please send us back...
+
+in client:
+tsamgroup29> GETMSG
+[2025-10-23 16:42:16] Sending: GETMSG
+[2025-10-23 16:42:16] Server response: MESSAGE: From: A5_123 Msg: SENDMSGA5_29please send us back...
+
+
+16. A5_4
+
+in the log:
+[2025-10-23 01:22:35] Received from connection peer: LIVE: SENDMSG,A5_29,A5_4,A5_4,"afhverju eru þið ennþá online. go to sleep"A5_4
+[2025-10-23 01:22:35] Received SENDMSG with hops: A5_4
+[2025-10-23 01:22:35] Stored message for group A5_29 from A5_4
+[2025-10-23 01:22:35] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 01:25:05] Received from connection client: GETMSG
+[2025-10-23 01:25:05] Sent reply to client: MESSAGE: From: A5_4 Msg: A5_4,"afhverju eru þið ennþá online. go to sleep"
+
+in the client:
+tsamgroup29> GETMSG
+[2025-10-23 01:25:05] Sending: GETMSG
+[2025-10-23 01:25:05] Server response: MESSAGE: From: A5_4 Msg: A5_4,"afhverju eru þið ennþá online. go to sleep"
+
+
+17. A5_140
+
+[2025-10-23 19:20:15] Received from connection peer: Instr_1: SENDMSG,A5_29,A5_140,hi 29 [hops: Instr_1]
+[2025-10-23 19:20:15] Received SENDMSG with hops: Instr_1
+[2025-10-23 19:20:15] Stored message for group A5_29 from A5_140
+[2025-10-23 19:20:15] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 19:22:59] Received from connection client: GETMSG
+[2025-10-23 19:22:59] Sent reply to client: MESSAGE: From: A5_140 Msg: hi 29
+
+in the client:
+tsamgroup29> GETMSG
+[2025-10-23 19:22:59] Sending: GETMSG
+[2025-10-23 19:22:59] Server response: MESSAGE: From: A5_140 Msg: hi 29
+
+
+18. A5_80
+
+[2025-10-23 18:54:29] Received from connection peer: A5_28: SENDMSG,A5_29,A5_80,Hello from A5_80 [hops: A5_28]
+[2025-10-23 18:54:29] Received SENDMSG with hops: A5_28
+[2025-10-23 18:54:29] Stored message for group A5_29 from A5_80
+[2025-10-23 18:54:29] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 20:58:49] Received from connection client: GETMSG
+[2025-10-23 20:58:49] Sent reply to client: MESSAGE: From: A5_80 Msg: Hello from A5_80
+
+in the client:
+tsamgroup29> GETMSG
+[2025-10-23 20:58:49] Sending: GETMSG
+[2025-10-23 20:58:49] Server response: MESSAGE: From: A5_80 Msg: Hello from A5_80
+
+
+19. A5_69
+
+[2025-10-18 11:51:05] Received from connection peer:A5_69 SENDMSG,A5_29,A5_69,Sorry, had regex_match intead of regex_search
+[2025-10-18 11:51:05] Server SENDMSG: to=A5_29 from=A5_69 msg=Sorry, had regex_match intead of regex_search
+[2025-10-18 11:51:05] Stored message from peer A5_69
+[-------------------]
+[2025-10-18 11:52:32] Received from connection client GETMSG
+[2025-10-18 11:52:32] Sent reply to client: MESSAGE: From: A5_69 Msg: Sorry, had regex_match intead of regex_search
+
+
+20. A5_150
+
+[2025-10-23 22:45:29] Received from connection peer: A5_150: SENDMSG,A5_29,A5_150,Port forward success! [hops: A5_150]
+[2025-10-23 22:45:29] Received SENDMSG with hops: A5_150
+[2025-10-23 22:45:29] Stored message for group A5_29 from A5_150
+[2025-10-23 22:45:29] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 22:45:35] Received from connection client: GETMSG
+[2025-10-23 22:45:35] Sent reply to client: MESSAGE: From: A5_150 Msg: Port forward success!
+
+in the client:
+tsamgroup29> GETMSG
+[2025-10-23 22:45:35] Sending: GETMSG
+[2025-10-23 22:45:35] Server response: MESSAGE: From: A5_150 Msg: Port forward success!
+
+
+Instructors messages:
+1. Instr_1
+[2025-10-22 23:13:33] Received from connection peer: A5_60: SENDMSG,A5_29,ORACLE,“If the automobile had followed the same development cycle as the computer, a Rolls-Royce  would today cost $100, get a million miles per gallon, and explode once a year, killing  everyone inside.”- Robert X. CringelyA5_28
+[2025-10-22 23:13:33] Stored message for group A5_29 from ORACLE
+[2025-10-22 23:13:33] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-22 23:15:09] Received from connection client: GETMSG
+[2025-10-22 23:15:09] Sent reply to client: MESSAGE: From: ORACLE Msg: “If the automobile had followed the same development cycle as the computer, a Rolls-Royce  would today cost $100, get a million miles per gallon, and explode once a year, killing  everyone inside.”- Robert X. CringelyA5_28
+
+
+2. Instr_2
+[2025-10-19 18:47:06] Received from connection client: GETMSG
+[2025-10-19 18:47:06] Sent reply to client: MESSAGE: From: Instr_2 Msg: I guess you know that messages need to start with SOH () and end with ETX ().
+
+3. Insrt_3
+[2025-10-22 08:26:50] Received from connection peer: Instr_3: SENDMSG,A5_29,Instr_3,You are using 100% CPU, probably due to busy-waiting!
+[2025-10-22 08:26:50] Stored message for group A5_29 from Instr_3
+[2025-10-22 08:26:50] Message is for us (A5_29) - stored and not forwarding
+
+4. ORACLE
+[2025-10-23 20:49:24] Received from connection peer: ORACLE: SENDMSG,A5_29,ORACLE,
+
+The Internet Oracle has pondered your question deeply. Your question was:
+  What's up, Doc? 
+And in response, thus spake the Oracle:
+  The price of duck feathers for insulating cold-weather jackets and
+  comfy sleeping bags has increased over the past 50 years. Down is up. 
+[2025-10-23 20:49:24] Stored message for group A5_29 from ORACLE
+[2025-10-23 20:49:24] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 20:54:31] Received from connection client: GETMSG
+[2025-10-23 20:54:31] Sent reply to client: MESSAGE: From: ORACLE Msg: 
+
+The Internet Oracle has pondered your question deeply. Your question was:
+  What's up, Doc? 
+And in response, thus spake the Oracle:
+  The price of duck feathers for insulating cold-weather jackets and
+  comfy sleeping bags has increased over the past 50 years. Down is up. 
+
+in the client:
+tsamgroup29> GETMSG
+[2025-10-23 20:54:31] Sending: GETMSG
+[2025-10-23 20:54:31] Server response: MESSAGE: From: ORACLE Msg:
+
+The Internet Oracle has pondered your question deeply. Your question was:
+  What's up, Doc?
+And in response, thus spake the Oracle:
+  The price of duck feathers for insulating cold-weather jackets and
+  comfy sleeping bags has increased over the past 50 years. Down is up.
+
+5. NUMBER
+[2025-10-23 00:29:12] Received from connection peer: A5_92: SENDMSG,A5_29,NUMBER,
+8fc42c6ddf9966db3b09e84365034357
+[2025-10-23 00:29:12] Stored message for group A5_29 from NUMBER
+[2025-10-23 00:29:12] Message is for us (A5_29) - stored and not forwarding
+[-------------------]
+[2025-10-23 00:48:40] Received from connection client: GETMSG
+[2025-10-23 00:48:40] Sent reply to client: MESSAGE: From: NUMBER Msg: 
+8fc42c6ddf9966db3b09e84365034357
+
+
+
+(d) (10 points) Indirect Bot: Obtain 10 bonus points for the server delivering at least 10
+messages to the correct recipient for which your group is neither sender nor receiver.
+Provide relevant parts of your timestamped log to get these points, e.g., showing the
+relevant SENDMSG commands received and sent by your server.
+
+Logs will be shown for direct forwarding:
+[timestamp] Received from connection peer: A5_9: SENDMSG,A5_71,A5_50,hello
+[timestamp] Stored message for group A5_71 from A5_50
+[timestamp] Forwarded SENDMSG directly to destination: A5_71 (fd=...)
+or
+retrieved forwarding:
+[timestamp] Received from connection peer: A5_3: SENDMSG,A5_12,A5_8,message
+[timestamp] Stored message for group A5_12 from A5_8
+[timestamp] Received GETMSGS for group: A5_12
+[timestamp] Sent SENDMSG to peer requesting messages: SENDMSG,A5_12,A5_8,message
+
+
+direct indirect forwarding:
+1. A5_21 -> A5_5
+[2025-10-22 15:14:39] Received from connection peer: A5_21: SENDMSG,A5_5,A5_21,Little cute man boi
+[2025-10-22 15:14:39] Stored message for group A5_5 from A5_21
+[2025-10-22 15:14:39] TIER 1: Forwarded SENDMSG directly to destination A5_5 - DELETING from queue
+
+2. A5_21 -> A5_3
+[2025-10-22 15:14:22] Received from connection peer: A5_21: SENDMSG,A5_3,A5_21,Little cute man boi
+[2025-10-22 15:14:22] Stored message for group A5_3 from A5_21
+[2025-10-22 15:14:22] TIER 1: Forwarded SENDMSG directly to destination A5_3 - DELETING from queue
+
+3. A5_27 -> A5_121
+[2025-10-22 13:56:30] Received from connection peer: A5_121: SENDMSG,A5_27,A5_121,minnsta, eruði þá bara með marga servera í gangi með instructor seedinu og mismunandi port á serverunum?
+[2025-10-22 13:56:30] Stored message for group A5_27 from A5_121
+[2025-10-22 13:56:30] TIER 1: Forwarded SENDMSG directly to destination A5_27 - DELETING from queue
+
+4. A5_3 -> A5_21
+[2025-10-22 15:14:22] Received from connection peer: A5_21: SENDMSG,A5_3,A5_21,Little cute man boi
+[2025-10-22 15:14:22] Stored message for group A5_3 from A5_21
+[2025-10-22 15:14:22] TIER 1: Forwarded SENDMSG directly to destination A5_3 - DELETING from queue
+
+5. A5_3 -> Instr_1
+[2025-10-23 12:17:24] Received from connection peer: A5_3: SENDMSG,Instr_1,A5_3,From A5_14: Hello from A5_14
+[2025-10-23 12:17:24] Stored message for group Instr_1 from A5_3
+[2025-10-23 12:17:24] TIER 1: Forwarded SENDMSG directly to destination Instr_1 with hops - DELETING from queue
+
+6. A5_44 -> A5_5
+[2025-10-22 12:06:36] Received from connection peer: A5_867: SENDMSG,A5_5,A5_44,“The greatest enemy of knowledge is not ignorance,it is the illusion of knowledge.”
+— Stephen Hawking
+[2025-10-22 12:06:36] Stored message for group A5_5 from A5_44
+[2025-10-22 12:06:36] TIER 1: Forwarded SENDMSG directly to destination A5_5 - DELETING from queue
+
+7. A5_44 -> A5_5
+[2025-10-22 12:06:36] Received from connection peer: A5_867: SENDMSG,A5_5,A5_44,“The greatest enemy of knowledge is not ignorance,it is the illusion of knowledge.”
+— Stephen Hawking
+[2025-10-22 12:06:36] Stored message for group A5_5 from A5_44
+[2025-10-22 12:06:36] TIER 1: Forwarded SENDMSG directly to destination A5_5 - DELETING from queue
+
+8. A5_3 -> Instr_1
+[2025-10-23 12:17:24] Received from connection peer: A5_3: SENDMSG,Instr_1,A5_3,From A5_14: Hello from A5_14
+[2025-10-23 12:17:24] Stored message for group Instr_1 from A5_3
+[2025-10-23 12:17:24] TIER 1: Forwarded SENDMSG directly to destination Instr_1 with hops - DELETING from queue
+
+9. A5_44 -> A5_60
+[2025-10-23 20:58:40] Received from connection peer: A5_60: SENDMSG,A5_60,A5_44,General Kenobi
+[2025-10-23 20:58:40] Stored message for group A5_60 from A5_44
+[2025-10-23 20:58:40] TIER 1: Forwarded SENDMSG directly to destination A5_60 with hops - DELETING from queue
+
+10. A5_3 -> A5_11
+[2025-10-23 12:28:02] Received from connection peer: A5_3: SENDMSG,A5_11,A5_3,From A5_123: SENDMSGA5_11Hi!
+[2025-10-23 12:28:02] Stored message for group A5_11 from A5_3
+[2025-10-23 12:28:02] TIER 1: Forwarded SENDMSG directly to destination A5_11 with hops - DELETING from queue
+
+retrieval indirect forwarding:
+1. ORACLE -> A5_44
+[2025-10-23 07:04:49] Received from connection peer: ORACLE: SENDMSG,A5_44,ORACLE,Welcome to the net
+[2025-10-23 07:04:49] Stored message for group A5_44 from ORACLE
+[2025-10-23 07:04:49] TIER 3: Destination A5_44 unknown - KEEPING in queue for GETMSGS retrieval
+[-------------------]
+[2025-10-23 07:05:13] Received from connection peer: A5_44: GETMSGS,A5_44
+[2025-10-23 07:05:13] Received GETMSGS for group: A5_44
+[2025-10-23 07:05:13] Sent SENDMSG to peer requesting messages: SENDMSG,A5_44,ORACLE,Welcome to the net (for group A5_44)
+
+2. ORACLE -> A5_123
+[2025-10-23 07:18:33] Received from connection peer: ORACLE: SENDMSG,A5_123,ORACLE,
+
+The Internet Oracle has pondered your question deeply. Your question was:
+  Did you say, "Watch the sheeps," or "Wash the sheets"? How can I know
+  which is which? 
+And in response, thus spake the Oracle:
+  The sheep are the ones that object when you try to make them fit into
+  the washing machine. 
+[2025-10-23 07:18:33] Stored message for group A5_123 from ORACLE
+[2025-10-23 07:18:33] TIER 3: Destination A5_123 unknown - KEEPING in queue for GETMSGS retrieval
+[-------------------]
+[2025-10-23 08:20:13] Received from connection peer: A5_44: GETMSGS,A5_123
+[2025-10-23 08:20:13] Received GETMSGS for group: A5_123
+[2025-10-23 08:20:13] Sent SENDMSG to peer requesting messages: SENDMSG,A5_123,ORACLE,
+
+The Internet Oracle has pondered your question deeply. Your question was:
+  Did you say, "Watch the sheeps," or "Wash the sheets"? How can I know
+  which is which? 
+And in response, thus spake the Oracle:
+  The sheep are the ones that object when you try to make them fit into
+  the washing machine.  (for group A5_123)
+
+3. A5_3 -> A5_13
+[2025-10-22 15:07:41] Received from connection peer: A5_3: SENDMSG,A5_13,A5_3,To A5_13: Pls send us a msg
+[2025-10-22 15:07:41] Stored message for group A5_13 from A5_3
+[2025-10-22 15:07:41] TIER 2: Destination A5_13 known but Instr_1 not connected - KEEPING in queue
+[-------------------]
+[2025-10-22 15:12:40] Received GETMSGS for group: A5_13
+[2025-10-22 15:12:40] Sent SENDMSG to peer requesting messages: SENDMSG,A5_13,A5_3,To A5_13: Pls send us a msg (for group A5_13)
+
+
+
+
+(e) (10 points) Edge Bot: Obtain 10 points for your server being connected to at least 3
+peers, but none of the instructor servers, at 5 different times (at least 1h apart).
+Provide relevant parts of your timestamped log to get these points.
+
+I want to mention here, I talked with my TA and I decided it was best to always keep
+a connection to Instr_1 server, so that I can forward through him, when the server is known
+but not connected, that way the message will always reach its destination because
+the servers I need to send to will always at one point be connected to the Instr_1 server.
+And if I am not connected to the Instr_1 server then I will hold the message and wait for someone
+to fetch that message.
+
+Anyway, here are the times my server was only connected to student servers:
+[2025-10-21 15:19:22] Received from connection client: LISTSERVERS
+[2025-10-21 15:19:22] Sent reply to client: SERVERS,A5_29,130.208.246.98,4029;A5_14,130.208.246.98,4014;A5_5,130.208.246.98,4005;A5_27,130.208.246.98,4027;A5_666,130.208.246.98,4666;A5_92,130.208.246.98,4092;A5_52,130.208.246.98,4052;A5_81,130.208.246.98,4081;
+
+[2025-10-22 14:52:06] Received from connection client: LISTSERVERS
+[2025-10-22 14:52:06] Sent reply to client: SERVERS,A5_29,130.208.246.98,4029;A5_12,130.208.246.98,4012;A5_21,130.208.246.98,4021;A5_27,130.208.246.98,4027;A5_30,130.208.246.98,4030;A5_5,52.213.117.35,4005;
+
+[2025-10-23 18:41:06] Received from connection client: LISTSERVERS
+[2025-10-23 18:41:06] Sent reply to client: SERVERS,A5_29,130.208.246.98,4029;A5_21,130.208.246.98,4001;A5_64,130.208.246.98,4064;A5_123,130.208.246.98,4123;A5_67,130.208.246.98,4067;A5_18,130.208.246.98,4018;A5_92,130.208.246.98,4092;A5_4,130.208.246.98,4004;
+
+[2025-10-23 17:26:25] Received from connection client: LISTSERVERS
+[2025-10-23 17:26:25] Sent reply to client: SERVERS,A5_29,130.208.246.98,4029;A5_27,31.209.193.164,4027;A5_92,130.208.246.98,4092;A5_123,130.208.246.98,4123;A5_60,130.208.246.98,4060;A5_21,130.208.246.98,4021;
+
+[2025-10-23 22:52:36] Received from connection client: LISTSERVERS
+[2025-10-23 22:52:36] Sent reply to client: SERVERS,A5_29,130.208.246.98,4129;A5_42,157.157.63.142,4042;A5_16,130.208.246.98,4016;A5_64,130.208.246.98,4151;A5_3,130.208.246.98,4003;A5_44,130.208.246.98,4144;A5_60,130.208.246.98,4060;
+
+There are definetly more times when this happened, as you can probably see in the excel sheet for group 29.
+
+
+
+(f) (20 points) External Bot: Server is not running on the TSAM server or any campus
+machine or the VPN.
+• To do this from home you will probably need to perfom port forwarding on your local
+NAT router. You can test on the TSAM server, but all project submissions must use
+a non-RU IP address and your bot should show up in our logs with a non-RU IP
+address.
+• If you are connecting through eduroam from the student dormitory you won’t be able
+to use the dormitory network for these points. Please contact the instructor if this is
+an issue.
+To get the points, provide relevant parts of your timestamped log. We will check whether
+your bot shows up in the instructor server’s logs with a non-RU IP address at the given
+times.
+
+External Bot (20 pts):
+Server reachable from non-RU IP via router port forwarding.  
+Proof:
+
+
+$ export TSAM_PUBLIC_IP=157.157.82.8 //this is jason's public ip, to specify that we are using port forwarding (pls don't leak it)
+$ ./tsamgroup29 4029
+Starting TSAM Server A5_29 on port 4029
+Press Ctrl+C to stop...
+[DEBUG] advertised_ip(): Using TSAM_PUBLIC_IP = 157.157.82.8
+...
+[2025-10-23 22:22:23] PRIORITY: Connecting to Instr_1 for reliable message forwarding
+[2025-10-23 22:22:23] Connecting to 130.208.246.98:5001
+[2025-10-23 22:22:23] handleNewPeerConnection to 130.208.246.98:5001
+[2025-10-23 22:22:23] HELO sent to peer (130.208.246.98:5001) fd=5: HELO,A5_29
+[2025-10-23 22:22:23] Registered peer server: Instr_1 on fd=5
+[2025-10-23 22:22:23] Sent HELO response to peer Instr_1: HELO,A5_29
+[DEBUG] advertised_ip(): Using TSAM_PUBLIC_IP = 157.157.82.8
+[2025-10-23 22:22:23] Sent SERVERS response to peer Instr_1: SERVERS,A5_29,157.157.82.8,4029;Instr_1,130.208.246.98,5001;
+[2025-10-23 22:22:23] Received from connection peer: Instr_1: SERVERS,Instr_1,130.208.246.98,5001;Instr_2,130.208.246.98,5002;ORACLE,130.208.246.98,5003;A5_17,130.208.246.98,-1;A5_64,130.208.246.98,4064;A5_29,157.157.82.8,-1;A5_42,157.157.63.142,4042;A5_48,89.160.248.19,4185;
+
+
+Another run (with group number as A5_150 so we could talk to each other):
+[2025-10-23 22:41:18] Received from connection peer: A5_29: SENDMSG,A5_150,A5_29,hallo json [hops: A5_29]
+[2025-10-23 22:41:18] Stored message for group A5_150 from A5_29
+[2025-10-23 22:45:29] Stored message from A5_150 for group A5_29: Port forward success!

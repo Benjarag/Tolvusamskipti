@@ -1,0 +1,410 @@
+243-“There are two major products that come out of Berkeley: LSD and Unix. We don’t believe this to be a coincidence.”
+244-– Jeremy S. Anderson Instr_1
+245-[2025-10-22 23:13:33] Stored message for group A5_29 from ORACLE
+246:[2025-10-22 23:13:33] Message is for us (A5_29) - stored and not forwarding
+247-[2025-10-22 23:13:33] Received from connection peer: Instr_1: SENDMSG,A5_16,A5_28,hello from 28Instr_1
+--
+276-[2025-10-22 23:13:33] Sent GETMSGS to peer A5_60 for group: A5_13
+277-[2025-10-22 23:13:33] Received from connection peer: A5_60: SENDMSG,A5_29,A5_28,Hello from A5_28!A5_28
+278-[2025-10-22 23:13:33] Stored message for group A5_29 from A5_28
+279:[2025-10-22 23:13:33] Message is for us (A5_29) - stored and not forwarding
+280-[2025-10-22 23:13:33] Received from connection peer: A5_60: SENDMSG,A5_29,A5_28,Hello from A5_28!A5_28
+--
+305-[2025-10-22 23:13:33] Received from connection peer: A5_60: SENDMSG,A5_29,A5_28,Hello from A5_28!A5_28
+306-[2025-10-22 23:13:33] Received from connection peer: A5_60: SENDMSG,A5_29,ORACLE,“If the automobile had followed the same development cycle as the computer, a Rolls-Royce  would today cost $100, get a million miles per gallon, and explode once a year, killing  everyone inside.”- Robert X. CringelyA5_28
+307-[2025-10-22 23:13:33] Stored message for group A5_29 from ORACLE
+308:[2025-10-22 23:13:33] Message is for us (A5_29) - stored and not forwarding
+309-[2025-10-22 23:13:33] Received from connection peer: A5_60: SENDMSG,A5_81,A5_28,hello from 28A5_28
+--
+2355-[2025-10-22 23:20:48] Closing connection fd=15
+2356-[2025-10-22 23:20:48] Received from connection peer: A5_2: SENDMSG,A5_29,ORACLE,Welcome to the net
+2357-[2025-10-22 23:20:48] Stored message for group A5_29 from ORACLE
+2358:[2025-10-22 23:20:48] Message is for us (A5_29) - stored and not forwarding
+2359-[2025-10-22 23:20:48] Received from connection peer: A5_2: SENDMSG,A5_2,Instr_2,Here is the ASCII table in case you need it: 
+--
+3054-[2025-10-22 23:27:06] Received KEEPALIVE from peer A5_21 with 0 messages waiting
+3055-[2025-10-22 23:27:08] Received from connection peer: A5_27: SENDMSG,A5_29,A5_27,[31mH[33me[32ml[36ml[34mo[35m [91mW[93mo[92mr[94ml[95md[0mA5_27
+3056-[2025-10-22 23:27:08] Stored message for group A5_29 from A5_27
+3057:[2025-10-22 23:27:08] Message is for us (A5_29) - stored and not forwarding
+3058-[2025-10-22 23:27:15] Received from connection peer: A5_27: KEEPALIVE,0
+--
+3071-That’s where we come in: we’re computer professionals. We cause accidents.”
+3072-– Nathaniel Borenstein 
+3073-[2025-10-22 23:27:20] Stored message for group A5_29 from ORACLE
+3074:[2025-10-22 23:27:20] Message is for us (A5_29) - stored and not forwarding
+3075-[2025-10-22 23:27:26] Received from connection peer: A5_60: STATUSREQ
+--
+5107-
+5108-[0mA5_27
+5109-[2025-10-22 23:42:08] Stored message for group A5_29 from A5_27
+5110:[2025-10-22 23:42:08] Message is for us (A5_29) - stored and not forwarding
+5111-[2025-10-22 23:42:08] Received from connection peer: A5_21: KEEPALIVE,0
+--
+7047-
+7048-[0mA5_27
+7049-[2025-10-22 23:57:08] Stored message for group A5_29 from A5_27
+7050:[2025-10-22 23:57:08] Message is for us (A5_29) - stored and not forwarding
+7051-[2025-10-22 23:57:15] Received from connection peer: A5_21: KEEPALIVE,0
+--
+9449-
+9450-[0mA5_27
+9451-[2025-10-23 00:17:08] Stored message for group A5_29 from A5_27
+9452:[2025-10-23 00:17:08] Message is for us (A5_29) - stored and not forwarding
+9453-[2025-10-23 00:17:12] Received from connection peer: A5_92: KEEPALIVE,0
+--
+10156-[2025-10-23 00:29:07] Sent GETMSGS to peer ORACLE for group: A5_6969
+10157-[2025-10-23 00:29:07] Received from connection peer: ORACLE: SENDMSG,A5_29,ORACLE,Welcome to the net
+10158-[2025-10-23 00:29:07] Stored message for group A5_29 from ORACLE
+10159:[2025-10-23 00:29:07] Message is for us (A5_29) - stored and not forwarding
+10160-[2025-10-23 00:29:07] Received from connection peer: ORACLE: SENDMSG,A5_52,Instr_2,I guess you know that messages need to end with ETX () and start with SOH ().ORACLE
+--
+10174-[2025-10-23 00:29:12] Received from connection peer: A5_92: SENDMSG,A5_29,NUMBER,
+10175-8fc42c6ddf9966db3b09e84365034357
+10176-[2025-10-23 00:29:12] Stored message for group A5_29 from NUMBER
+10177:[2025-10-23 00:29:12] Message is for us (A5_29) - stored and not forwarding
+10178-[2025-10-23 00:29:26] Received from connection peer: A5_21: KEEPALIVE,0
+--
+10307-[2025-10-23 00:30:47] Closing connection fd=15
+10308-[2025-10-23 00:30:48] Received from connection peer: A5_52: SENDMSG,A5_29,A5_52,Comms picked up a “boop.” Was that you greeting satellites again? They’re flattered but request boundaries.
+10309-[2025-10-23 00:30:48] Stored message for group A5_29 from A5_52
+10310:[2025-10-23 00:30:48] Message is for us (A5_29) - stored and not forwarding
+--
+11580-[2025-10-23 00:50:05] Received from connection peer: NUMBER: SENDMSG,A5_29,NUMBER,
+11581-0639f5c0e2228ccdf3385f88f1579491
+11582-[2025-10-23 00:50:05] Stored message for group A5_29 from NUMBER
+11583:[2025-10-23 00:50:05] Message is for us (A5_29) - stored and not forwarding
+11584-[2025-10-23 00:50:05] Received from connection peer: ORACLE: SERVERS,ORACLE,130.208.246.98,5003;Instr_1,130.208.246.98,5001;A5_29,130.208.246.98,-1;Instr_2,130.208.246.98,5002;A5_52,130.208.246.98,4052;
+--
+12251-[2025-10-23 00:58:35] Received from connection peer: ORACLE: SENDMSG,A5_29,ORACLE,
+12252-
+12253-[2025-10-23 00:58:35] Stored message for group A5_29 from ORACLE
+12254:[2025-10-23 00:58:35] Message is for us (A5_29) - stored and not forwarding
+12255-[2025-10-23 00:58:35] Peer check: 8 connected (4 students, 4 instructors)
+--
+13543-“The greatest enemy of knowledge is not ignorance, it is the illusion of knowledge.”
+13544-— Stephen Hawking 
+13545-[2025-10-23 01:14:23] Stored message for group A5_29 from ORACLE
+13546:[2025-10-23 01:14:23] Message is for us (A5_29) - stored and not forwarding
+13547-[2025-10-23 01:14:23] Received from connection peer: ORACLE: SENDMSG,A5_29,ORACLE,
+--
+13550- imagination embraces the entire world, stimulating progress, giving birth to evolution.”
+13551-— Albert Einstein 
+13552-[2025-10-23 01:14:23] Stored message for group A5_29 from ORACLE
+13553:[2025-10-23 01:14:23] Message is for us (A5_29) - stored and not forwarding
+13554-[2025-10-23 01:14:23] Received from connection peer: ORACLE: ERROR,ORACLE,A5_29,Don't try to fetch my mail!
+--
+13619- everyone inside.”
+13620-- Robert X. Cringely  
+13621-[2025-10-23 01:15:25] Stored message for group A5_29 from ORACLE
+13622:[2025-10-23 01:15:25] Message is for us (A5_29) - stored and not forwarding
+13623-[2025-10-23 01:15:33] Received from connection client: GETMSG
+--
+14209-[2025-10-23 01:22:05] Received from connection peer: LIVE: SERVERS,A5_29,130.208.246.98,49012;A5_4,130.208.246.98,48434;A5_52,130.208.246.98,49010;Instr_1,130.208.246.98,5001
+14210-[2025-10-23 01:22:06] Received from connection peer: LIVE: SENDMSG,A5_29,A5_23,This is a test msg from group 23
+14211-[2025-10-23 01:22:06] Stored message for group A5_29 from A5_23
+14212:[2025-10-23 01:22:06] Message is for us (A5_29) - stored and not forwarding
+14213-[2025-10-23 01:22:19] Received from connection peer: Instr_1: STATUSREQ
+--
+14233-
+14234-Les sanglots longs des violons de l’automne 
+14235-[2025-10-23 01:22:19] Stored message for group A5_29 from ORACLE
+14236:[2025-10-23 01:22:19] Message is for us (A5_29) - stored and not forwarding
+14237-[2025-10-23 01:22:35] WARNING: Received HELO with suspiciously short peer name: 'SG' (likely frame corruption)
+14238-[2025-10-23 01:22:35] Received from connection peer: LIVE: SENDMSG,A5_29,A5_4,A5_4,"afhverju eru þið ennþá online. go to sleep"A5_4
+14239-[2025-10-23 01:22:35] Received SENDMSG with hops: A5_4
+14240-[2025-10-23 01:22:35] Stored message for group A5_29 from A5_4
+14241:[2025-10-23 01:22:35] Message is for us (A5_29) - stored and not forwarding
+14242-[2025-10-23 01:22:43] Registered peer server: LIVE on fd=6
+--
+14412-[2025-10-23 01:24:35] Received from connection peer: NUMBER: SENDMSG,A5_29,NUMBER,
+14413-d98a07f84921b24ee30f86fd8cd85c3c
+14414-[2025-10-23 01:24:35] Stored message for group A5_29 from NUMBER
+14415:[2025-10-23 01:24:35] Message is for us (A5_29) - stored and not forwarding
+14416-[2025-10-23 01:24:43] Received from connection peer: A5_4: KEEPALIVE,0
+--
+15321-[2025-10-23 01:41:43] Received from connection peer: NUMBER: SENDMSG,A5_29,NUMBER,
+15322-
+15323-[2025-10-23 01:41:43] Stored message for group A5_29 from NUMBER
+15324:[2025-10-23 01:41:43] Message is for us (A5_29) - stored and not forwarding
+15325-[2025-10-23 01:41:55] Peer check: 4 connected (1 students, 3 instructors)
+--
+15374- everyone inside.”
+15375-- Robert X. Cringely  
+15376-[2025-10-23 01:43:25] Stored message for group A5_29 from ORACLE
+15377:[2025-10-23 01:43:25] Message is for us (A5_29) - stored and not forwarding
+15378-[2025-10-23 01:43:25] Received from connection peer: ORACLE: SERVERS,ORACLE,130.208.246.98,5003;Instr_1,130.208.246.98,5001;A5_29,130.208.246.98,4029;Instr_2,130.208.246.98,5002;A5_52,130.208.246.98,4052;
+--
+15425-“Writing in C or C++ is like running a chain saw with all the safety guards removed.”
+15426-Bob Gray 
+15427-[2025-10-23 01:44:43] Stored message for group A5_29 from ORACLE
+15428:[2025-10-23 01:44:43] Message is for us (A5_29) - stored and not forwarding
+15429-[2025-10-23 01:44:55] Peer check: 4 connected (1 students, 3 instructors)
+--
+18568-“The best way to get accurate information on Usenet is to post something wrong and wait for corrections.”
+18569-– Matthew Austern 
+18570-[2025-10-23 03:03:10] Stored message for group A5_29 from ORACLE
+18571:[2025-10-23 03:03:10] Message is for us (A5_29) - stored and not forwarding
+18572-[2025-10-23 03:03:38] Received from connection peer: A5_52: STATUSREQ
+--
+20166- everyone inside.”
+20167-- Robert X. Cringely  
+20168-[2025-10-23 03:53:12] Stored message for group A5_29 from ORACLE
+20169:[2025-10-23 03:53:12] Message is for us (A5_29) - stored and not forwarding
+20170-[2025-10-23 03:53:12] Received from connection peer: Instr_1: SERVERS,Instr_1,130.208.246.98,5001;Instr_2,130.208.246.98,5002;ORACLE,130.208.246.98,5003;A5_29,130.208.246.98,-1;
+--
+20484- laziness, impatience, and hubris.”
+20485- Larry Wall 
+20486-[2025-10-23 04:03:12] Stored message for group A5_29 from ORACLE
+20487:[2025-10-23 04:03:12] Message is for us (A5_29) - stored and not forwarding
+20488-[2025-10-23 04:03:12] Closing connection fd=7 due to frame corruption
+--
+21139-
+21140-Blessent mon cœur d’une langueur monotone. 
+21141-[2025-10-23 04:22:14] Stored message for group A5_29 from ORACLE
+21142:[2025-10-23 04:22:14] Message is for us (A5_29) - stored and not forwarding
+21143-[2025-10-23 04:22:14] Received from connection peer: ORACLE: ERROR,ORACLE,A5_29,Don't try to fetch my mail!
+--
+21943-“The greatest enemy of knowledge is not ignorance, it is the illusion of knowledge.”
+21944-— Stephen Hawking 
+21945-[2025-10-23 04:47:15] Stored message for group A5_29 from ORACLE
+21946:[2025-10-23 04:47:15] Message is for us (A5_29) - stored and not forwarding
+21947-[2025-10-23 04:47:15] Received from connection peer: ORACLE: ERROR,ORACLE,A5_29,Don't try to fetch my mail!
+--
+23147-[2025-10-23 05:27:46] Sent reply to peer: NO_MESSAGES
+23148-[2025-10-23 05:27:46] Received from connection peer: ORACLE: SENDMSG,A5_29,ORACLE,Welcome to the net
+23149-[2025-10-23 05:27:46] Stored message for group A5_29 from ORACLE
+23150:[2025-10-23 05:27:46] Message is for us (A5_29) - stored and not forwarding
+--
+26216-[2025-10-23 07:06:13] Sent reply to peer: STATUSRESP,A5_29,0,Instr_1,0,A5_52,0,A5_44,0,A5_65,0,Instr_2,0,ORACLE,0,NUMBER,0,CLIENT_65,0
+26217-[2025-10-23 07:06:13] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Err the red sun rises
+26218-[2025-10-23 07:06:13] Stored message for group A5_29 from A5_44
+26219:[2025-10-23 07:06:13] Message is for us (A5_29) - stored and not forwarding
+26220-[2025-10-23 07:06:13] Registered peer server: ORACLE on fd=8
+--
+26357-[2025-10-23 07:08:13] Sent reply to peer: STATUSRESP,A5_29,0,Instr_1,0,A5_52,0,A5_44,0,A5_65,0,whoami,0,Instr_2,0,ORACLE,0,NUMBER,0,CLIENT_65,0
+26358-[2025-10-23 07:08:13] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Ever has it bloomed on the graves of my forebearers, now it shall cover the grave of my server
+26359-[2025-10-23 07:08:13] Stored message for group A5_29 from A5_44
+26360:[2025-10-23 07:08:13] Message is for us (A5_29) - stored and not forwarding
+26361-[2025-10-23 07:08:13] Registered peer server: ORACLE on fd=9
+--
+26552-[2025-10-23 07:10:13] Received from connection peer: A5_44: SERVERS,A5_44,130.208.246.98,4144;whoamYOU,130.208.246.98,4060;A5_3,130.208.246.98,4003;whoami,130.208.246.98,4140;A5_52,130.208.246.98,4052;A5_29,130.208.246.98,4029;ORACLE,130.208.246.98,5003;NUMBER,130.208.246.98,5004;Instr_2,130.208.246.98,5002
+26553-[2025-10-23 07:10:13] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Et tu, Brute?
+26554-[2025-10-23 07:10:13] Stored message for group A5_29 from A5_44
+26555:[2025-10-23 07:10:13] Message is for us (A5_29) - stored and not forwarding
+26556-[2025-10-23 07:10:13] Received from connection peer: ORACLE: STATUSREQ
+--
+26734-[2025-10-23 07:12:13] Connecting to 130.208.246.98:5003
+26735-[2025-10-23 07:12:13] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,These arent the droids you're looking for.
+26736-[2025-10-23 07:12:13] Stored message for group A5_29 from A5_44
+26737:[2025-10-23 07:12:13] Message is for us (A5_29) - stored and not forwarding
+26738-[2025-10-23 07:12:13] handleNewPeerConnection to 130.208.246.98:4140
+--
+27413-[2025-10-23 07:18:13] Received KEEPALIVE from peer A5_44 with 0 messages waiting
+27414-[2025-10-23 07:18:13] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,They expect one of us in the wreckage brother
+27415-[2025-10-23 07:18:13] Stored message for group A5_29 from A5_44
+27416:[2025-10-23 07:18:13] Message is for us (A5_29) - stored and not forwarding
+27417-[2025-10-23 07:18:13] Closing connection fd=15 due to frame corruption
+--
+27465- imagination embraces the entire world, stimulating progress, giving birth to evolution.”
+27466-— Albert Einstein 
+27467-[2025-10-23 07:18:33] Stored message for group A5_29 from ORACLE
+27468:[2025-10-23 07:18:33] Message is for us (A5_29) - stored and not forwarding
+27469-[2025-10-23 07:18:38] Received from connection peer: A5_60: KEEPALIVE,0
+--
+27661-[2025-10-23 07:20:13] Received from connection peer: A5_44: SERVERS,A5_44,130.208.246.98,4144;whoamYOU,130.208.246.98,4060;A5_3,130.208.246.98,4003;whoami,130.208.246.98,4140;A5_52,130.208.246.98,4052;A5_29,130.208.246.98,4029;ORACLE,130.208.246.98,5003;NUMBER,130.208.246.98,5004;Instr_2,130.208.246.98,5002
+27662-[2025-10-23 07:20:13] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Were gonna need a bigget buffer
+27663-[2025-10-23 07:20:13] Stored message for group A5_29 from A5_44
+27664:[2025-10-23 07:20:13] Message is for us (A5_29) - stored and not forwarding
+27665-[2025-10-23 07:20:13] Received from connection peer: A5_44: KEEPALIVE,0
+--
+27844-[2025-10-23 07:22:13] Skipping SERVERS entry with invalid port: '-1'
+27845-[2025-10-23 07:22:13] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,General Kenobi
+27846-[2025-10-23 07:22:13] Stored message for group A5_29 from A5_44
+27847:[2025-10-23 07:22:13] Message is for us (A5_29) - stored and not forwarding
+27848-[2025-10-23 07:22:13] Received from connection peer: A5_44: KEEPALIVE,0
+--
+28137-[2025-10-23 07:25:53] Sent reply to peer: STATUSRESP,A5_29,0,A5_13,0,A5_52,0,A5_44,0,A5_3,0,A5_60,0,Instr_1,0,A5_65,0,whoami,0,Instr_2,0,ORACLE,0,NUMBER,0,A5_35,0,CLIENT_65,0
+28138-[2025-10-23 07:25:55] Received from connection peer: A5_60: SENDMSG,A5_29,A5_60,Hello from A5_60 automated!
+28139-[2025-10-23 07:25:55] Stored message for group A5_29 from A5_60
+28140:[2025-10-23 07:25:55] Message is for us (A5_29) - stored and not forwarding
+28141-[2025-10-23 07:25:56] Received from connection peer: A5_60: STATUSREQ
+--
+28383-[2025-10-23 07:28:13] Received KEEPALIVE from peer A5_44 with 0 messages waiting
+28384-[2025-10-23 07:28:13] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Hello there!
+28385-[2025-10-23 07:28:13] Stored message for group A5_29 from A5_44
+28386:[2025-10-23 07:28:13] Message is for us (A5_29) - stored and not forwarding
+28387-[2025-10-23 07:28:13] Closing connection fd=14 due to frame corruption
+--
+30071-[2025-10-23 07:46:13] Sent SERVERS response to peer Instr_2: SERVERS,A5_29,130.208.246.98,4029;A5_52,130.208.246.98,4052;A5_44,130.208.246.98,4144;A5_3,130.208.246.98,4003;A5_60,130.208.246.98,4060;ORACLE,130.208.246.98,5003;Instr_2,130.208.246.98,5002;Instr_1,130.208.246.98,5001;
+30072-[2025-10-23 07:46:13] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Fear not the server that sends 10000 messages one time, but the server that sends 1 message 10000 times
+30073-[2025-10-23 07:46:13] Stored message for group A5_29 from A5_44
+30074:[2025-10-23 07:46:13] Message is for us (A5_29) - stored and not forwarding
+30075-[2025-10-23 07:46:13] Received from connection peer: A5_44: KEEPALIVE,0
+--
+30400-[2025-10-23 07:49:26] Sent reply to peer: STATUSRESP,A5_29,0,A5_13,0,A5_52,0,A5_44,0,A5_3,0,A5_60,0,ORACLE,0,NUMBER,0,Instr_1,0,A5_65,0,whoami,0,Instr_2,0,A5_35,0,CLIENT_65,0
+30401-[2025-10-23 07:49:33] Received from connection peer: A5_44: SENDMSG,A5_29,NUMBER,c13d88cb4cb02003daedb8a84e5d272a
+30402-[2025-10-23 07:49:33] Stored message for group A5_29 from NUMBER
+30403:[2025-10-23 07:49:33] Message is for us (A5_29) - stored and not forwarding
+30404-[2025-10-23 07:49:38] Received from connection peer: A5_3: KEEPALIVE,78
+--
+33322-[2025-10-23 08:24:29] Received from connection peer: NUMBER: SENDMSG,A5_29,NUMBER,
+33323-d98a07f84921b24ee30f86fd8cd85c3c
+33324-[2025-10-23 08:24:29] Stored message for group A5_29 from NUMBER
+33325:[2025-10-23 08:24:29] Message is for us (A5_29) - stored and not forwarding
+33326-[2025-10-23 08:24:37] Received from connection peer: A5_16: KEEPALIVE,0
+--
+33996-[2025-10-23 08:32:13] Sent reply to peer: STATUSRESP,A5_29,0,A5_13,0,A5_52,0,A5_44,0,A5_3,0,A5_60,0,A5_16,0,Instr_2,0,Instr_1,0,whoamYOU,0,A5_65,0,whoami,0,ORACLE,0,NUMBER,0,A5_123,0,A5_35,0,CLIENT_65,0
+33997-[2025-10-23 08:32:13] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Mer lidur bara abbillilebavebala
+33998-[2025-10-23 08:32:13] Stored message for group A5_29 from A5_44
+33999:[2025-10-23 08:32:13] Message is for us (A5_29) - stored and not forwarding
+34000-[2025-10-23 08:32:13] Received from connection peer: A5_44: KEEPALIVE,0
+--
+35980-[2025-10-23 08:54:20] Received from connection peer: NUMBER: SENDMSG,A5_29,NUMBER,
+35981-
+35982-[2025-10-23 08:54:20] Stored message for group A5_29 from NUMBER
+35983:[2025-10-23 08:54:20] Message is for us (A5_29) - stored and not forwarding
+35984-[2025-10-23 08:54:20] Received from connection peer: Instr_1: KEEPALIVE,0
+--
+35999- build better mice."
+36000- Anonymous 
+36001-[2025-10-23 08:54:20] Stored message for group A5_29 from ORACLE
+36002:[2025-10-23 08:54:20] Message is for us (A5_29) - stored and not forwarding
+36003-[2025-10-23 08:54:26] Received from connection peer: A5_60: STATUSREQ
+--
+37599-[0m [hops: A5_27]
+37600-[2025-10-23 09:13:44] Received SENDMSG with hops: A5_27
+37601-[2025-10-23 09:13:44] Stored message for group A5_29 from A5_27
+37602:[2025-10-23 09:13:44] Message is for us (A5_29) - stored and not forwarding
+37603-[2025-10-23 09:13:44] Received from connection peer: A5_27: HELO,A5_27
+--
+38014-[2025-10-23 09:18:44] Received from connection peer: A5_27: SENDMSG,A5_29,A5_27,[31mH[33me[32ml[36ml[34mo[35m [91mW[93mo[92mr[94ml[95md[0m [hops: A5_27]
+38015-[2025-10-23 09:18:44] Received SENDMSG with hops: A5_27
+38016-[2025-10-23 09:18:44] Stored message for group A5_29 from A5_27
+38017:[2025-10-23 09:18:44] Message is for us (A5_29) - stored and not forwarding
+38018-[2025-10-23 09:18:44] Received from connection peer: A5_27: HELO,A5_27
+--
+38932-[0m [hops: A5_27]
+38933-[2025-10-23 09:28:44] Received SENDMSG with hops: A5_27
+38934-[2025-10-23 09:28:44] Stored message for group A5_29 from A5_27
+38935:[2025-10-23 09:28:44] Message is for us (A5_29) - stored and not forwarding
+38936-[2025-10-23 09:28:44] Received from connection peer: A5_13: KEEPALIVE,0
+--
+42119-[0m [hops: A5_27]
+42120-[2025-10-23 10:03:44] Received SENDMSG with hops: A5_27
+42121-[2025-10-23 10:03:44] Stored message for group A5_29 from A5_27
+42122:[2025-10-23 10:03:44] Message is for us (A5_29) - stored and not forwarding
+42123-[2025-10-23 10:03:51] Received from connection peer: A5_27: HELO,A5_27
+--
+50074-  The sheep are the ones that object when you try to make them fit into
+50075-  the washing machine. 
+50076-[2025-10-23 11:39:57] Stored message for group A5_29 from ORACLE
+50077:[2025-10-23 11:39:57] Message is for us (A5_29) - stored and not forwarding
+50078-[2025-10-23 11:40:22] Received from connection peer: A5_77: STATUSREQ
+--
+60156-[2025-10-23 12:40:53] Received KEEPALIVE from peer A5_77 with 0 messages waiting
+60157-[2025-10-23 12:40:55] Received from connection peer: A5_60: SENDMSG,A5_29,A5_60,Hello from A5_60 automated!
+60158-[2025-10-23 12:40:55] Stored message for group A5_29 from A5_60
+60159:[2025-10-23 12:40:55] Message is for us (A5_29) - stored and not forwarding
+60160-[2025-10-23 12:40:57] Received from connection peer: A5_60: STATUSREQ
+--
+61620- everyone inside.”
+61621-- Robert X. Cringely  
+61622-[2025-10-23 12:52:00] Stored message for group A5_29 from ORACLE
+61623:[2025-10-23 12:52:00] Message is for us (A5_29) - stored and not forwarding
+61624-[2025-10-23 12:52:02] Received from connection peer: A5_77: GETMSGS,A5_77
+--
+66851-[2025-10-23 13:14:18] Sent reply to peer: STATUSRESP,A5_29,0,Instr_1,0,A5_25,0,Instr_2,0,ORACLE,0,A5_5,0,NUMBER,0,A5_2,0,A5_66,0,A5_77,0,A5_12,0,A5_44,0,A5_3,0,A5_6,0,A5_11,0,A5_18,0,A5_28,0,A5_40,0,A5_60,0,A5_81,0,A5_14,0,A5_92,0,A5_123,0,A5_4,0,A5_99,0,A5_13,0
+66852-[2025-10-23 13:14:18] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,General Kenobi
+66853-[2025-10-23 13:14:18] Stored message for group A5_29 from A5_44
+66854:[2025-10-23 13:14:18] Message is for us (A5_29) - stored and not forwarding
+66855-[2025-10-23 13:14:27] Registered peer server: SREQ on fd=6
+--
+67344-[2025-10-23 13:19:08] Added fd=8 to poll list
+67345-[2025-10-23 13:19:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Ever has it bloomed on the graves of my forebearers, now it shall cover the grave of my server
+67346-[2025-10-23 13:19:08] Stored message for group A5_29 from A5_44
+67347:[2025-10-23 13:19:08] Message is for us (A5_29) - stored and not forwarding
+67348-[2025-10-23 13:19:08] Registered peer server: A5_28 on fd=8
+--
+67617-  The sheep are the ones that object when you try to make them fit into
+67618-  the washing machine. 
+67619-[2025-10-23 13:21:33] Stored message for group A5_29 from A5_25
+67620:[2025-10-23 13:21:33] Message is for us (A5_29) - stored and not forwarding
+67621-[2025-10-23 13:21:33] Received from connection peer: A5_25: SENDMSG,A5_25,A5_25,ORACLE,
+--
+68359-[2025-10-23 13:27:08] Sent reply to peer: STATUSRESP,A5_29,0,A5_12,0,A5_44,0,A5_77,0,A5_28,0,A5_5,0,A5_23,0,A5_2,0,A5_147,0,A5_92,0,A5_3,0,A5_6,0,A5_11,0,A5_18,0,A5_25,0,A5_32,0,A5_40,0,A5_52,0,A5_60,0,A5_66,0,A5_81,0,A5_14,0,A5_123,0,A5_36,0,A5_101,0,Instr_1,0,Instr_2,0,ORACLE,0,NUMBER,0,A5_4,0,A5_99,0,A5_13,0
+68360-[2025-10-23 13:27:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Err the red sun rises
+68361-[2025-10-23 13:27:08] Stored message for group A5_29 from A5_44
+68362:[2025-10-23 13:27:08] Message is for us (A5_29) - stored and not forwarding
+68363-[2025-10-23 13:27:08] New connection accepted from 130.208.246.98:55482 on fd=13
+--
+68647-[2025-10-23 13:29:08] Received KEEPALIVE from peer A5_28 with 0 messages waiting
+68648-[2025-10-23 13:29:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,They expect one of us in the wreckage brother
+68649-[2025-10-23 13:29:08] Stored message for group A5_29 from A5_44
+68650:[2025-10-23 13:29:08] Message is for us (A5_29) - stored and not forwarding
+68651-[2025-10-23 13:29:08] Received from connection peer: A5_28: GETMSGS,A5_28
+--
+68883-[2025-10-23 13:31:08] Sent reply to peer: STATUSRESP,A5_29,0,A5_12,0,A5_44,0,A5_77,0,A5_28,0,A5_5,0,A5_67,0,A5_2,0,A5_25,0,A5_47,0,UNKNOWN,0,A5_23,0,A5_147,0,A5_92,0,A5_3,0,A5_6,0,A5_11,0,A5_18,0,A5_32,0,A5_40,0,A5_52,0,A5_60,0,A5_66,0,A5_81,0,A5_14,0,A5_123,0,A5_36,0,A5_101,0,Instr_1,0,Instr_2,0,ORACLE,0,NUMBER,0,A5_4,0,A5_99,0,A5_13,0
+68884-[2025-10-23 13:31:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Were gonna need a bigget buffer
+68885-[2025-10-23 13:31:08] Stored message for group A5_29 from A5_44
+68886:[2025-10-23 13:31:08] Message is for us (A5_29) - stored and not forwarding
+68887-[2025-10-23 13:31:08] Received from connection peer: A5_28: KEEPALIVE,0
+--
+69676-[2025-10-23 13:39:08] Received from connection peer: A5_44: SERVERS,A5_44,130.208.246.98,4144;A5_60,130.208.246.98,4060;A5_18,130.208.246.98,4018;ORACLE,130.208.246.98,5003;A5_29,130.208.246.98,4129;A5_25,130.208.246.98,4025;A5_77,130.208.246.98,4177
+69677-[2025-10-23 13:39:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Hello there!
+69678-[2025-10-23 13:39:08] Stored message for group A5_29 from A5_44
+69679:[2025-10-23 13:39:08] Message is for us (A5_29) - stored and not forwarding
+69680-[2025-10-23 13:39:09] Sent HELO ping to peer A5_12 (alive check)
+--
+70103-[2025-10-23 13:59:08] HELO sent to peer (130.208.246.98:4123) fd=6: HELO,A5_29
+70104-[2025-10-23 13:59:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Ever has it bloomed on the graves of my forebearers, now it shall cover the grave of my server
+70105-[2025-10-23 13:59:08] Stored message for group A5_29 from A5_44
+70106:[2025-10-23 13:59:08] Message is for us (A5_29) - stored and not forwarding
+70107-[2025-10-23 13:59:08] Connection error/hangup on fd=6
+--
+70323-[2025-10-23 14:01:08] HELO sent to peer (130.208.246.98:4123) fd=7: HELO,A5_29
+70324-[2025-10-23 14:01:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Were gonna need a bigget buffer
+70325-[2025-10-23 14:01:08] Stored message for group A5_29 from A5_44
+70326:[2025-10-23 14:01:08] Message is for us (A5_29) - stored and not forwarding
+70327-[2025-10-23 14:01:08] Connection error/hangup on fd=7
+--
+70692-[2025-10-23 14:03:08] Sent reply to peer: STATUSRESP,A5_29,0,Instr_1,0,A5_25,0,A5_23,0,A5_44,0,A5_123,0,A5_60,0,A5_52,0,A5_66,0,A5_77,0,A5_99,0,A5_92,0,A5_147,0,A5_21,0,A5_11,0,A5_28,0,A5_12,0,A5_32,0,A5_40,0,A5_65,0,A5_67,0,A5_81,0,A5_14,0,A5_16,0,A5_101,0,A5_85,0,Instr_2,0,ORACLE,0,NUMBER,0,A5_4,0,A5_42,0,A5_13,0
+70693-[2025-10-23 14:03:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,They expect one of us in the wreckage brother
+70694-[2025-10-23 14:03:08] Stored message for group A5_29 from A5_44
+70695:[2025-10-23 14:03:08] Message is for us (A5_29) - stored and not forwarding
+70696-[2025-10-23 14:03:08] Handshake timeout for fd=8 after 61 seconds
+--
+70892-[2025-10-23 14:05:08] Sent reply to peer: STATUSRESP,A5_29,0,A5_25,0,A5_23,0,A5_16,0,A5_44,0,A5_123,0,A5_60,0,A5_52,0,A5_66,0,A5_77,0,A5_99,0,A5_92,0,A5_147,0,A5_21,0,A5_11,0,A5_28,0,A5_12,0,A5_32,0,A5_40,0,A5_65,0,A5_67,0,A5_81,0,A5_14,0,A5_101,0,A5_85,0,Instr_1,0,Instr_2,0,ORACLE,0,NUMBER,0,A5_4,0,A5_42,0,A5_13,0,,0
+70893-[2025-10-23 14:05:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Hello there!
+70894-[2025-10-23 14:05:08] Stored message for group A5_29 from A5_44
+70895:[2025-10-23 14:05:08] Message is for us (A5_29) - stored and not forwarding
+70896-[2025-10-23 14:05:14] Received from connection peer: A5_16: KEEPALIVE,0
+--
+71364-[2025-10-23 14:09:08] Sent reply to peer: STATUSRESP,A5_29,0,A5_12,0,A5_25,0,A5_23,0,A5_16,0,A5_44,0,A5_123,0,A5_60,0,A5_52,0,A5_77,0,A5_99,0,A5_92,0,A5_147,0,A5_21,0,A5_11,0,A5_28,0,A5_32,0,A5_40,0,A5_65,2,A5_66,0,A5_67,0,A5_81,0,A5_14,0,A5_101,0,A5_85,0,Instr_1,0,Instr_2,0,ORACLE,0,NUMBER,0,A5_4,0,A5_42,0,A5_13,0,,0
+71365-[2025-10-23 14:09:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,These arent the droids you're looking for.
+71366-[2025-10-23 14:09:08] Stored message for group A5_29 from A5_44
+71367:[2025-10-23 14:09:08] Message is for us (A5_29) - stored and not forwarding
+71368-[2025-10-23 14:09:13] Received from connection peer: A5_77: STATUSREQ
+--
+71434-[2025-10-23 14:09:44] Sent GETMSGS to peer A5_12 for group: 
+71435-[2025-10-23 14:09:44] Received from connection peer: A5_12: SENDMSG,A5_29,A5_12,Sorry kæri vinur,það var eitthver sem stal mínu porti,þannig ég stal þínu!
+71436-[2025-10-23 14:09:44] Stored message for group A5_29 from A5_12
+71437:[2025-10-23 14:09:44] Message is for us (A5_29) - stored and not forwarding
+71438-[2025-10-23 14:09:44] Received from connection peer: A5_12: SENDMSG,A5_11,A5_77,hæhæ [hops: Instr_1]
+--
+71655-[2025-10-23 14:11:08] Sent reply to peer: STATUSRESP,A5_29,0,A5_12,0,A5_25,0,A5_23,0,A5_44,0,A5_123,0,A5_60,0,A5_52,0,A5_77,0,A5_99,0,A5_147,0,A5_21,0,A5_11,2,A5_28,0,A5_32,0,A5_40,0,A5_65,1,A5_66,0,A5_67,0,A5_81,0,A5_14,0,A5_92,0,A5_16,0,A5_101,0,A5_85,0,Instr_1,0,Instr_2,0,ORACLE,1,NUMBER,0,A5_4,0,A5_42,0,A5_13,0,,0
+71656-[2025-10-23 14:11:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Ever has it bloomed on the graves of my forebearers, now it shall cover the grave of my server
+71657-[2025-10-23 14:11:08] Stored message for group A5_29 from A5_44
+71658:[2025-10-23 14:11:08] Message is for us (A5_29) - stored and not forwarding
+71659-[2025-10-23 14:11:08] Received from connection peer: A5_44: GETMSGS,ORACLE
+--
+71873-[2025-10-23 14:13:08] Received from connection peer: A5_44: SERVERS,A5_44,130.208.246.98,4144;ORACLE,130.208.246.98,5003;Instr_1,130.208.246.98,5001;NUMBER,130.208.246.98,5004;A5_52,130.208.246.98,4052;A5_77,130.208.246.98,4177
+71874-[2025-10-23 14:13:08] Received from connection peer: A5_44: SENDMSG,A5_29,A5_44,Et tu, Brute?
+71875-[2025-10-23 14:13:08] Stored message for group A5_29 from A5_44
+71876:[2025-10-23 14:13:08] Message is for us (A5_29) - stored and not forwarding
+71877-[2025-10-23 14:13:23] Received from connection peer: A5_99: KEEPALIVE,0
+--
+73681-[2025-10-23 14:34:49] Sent STATUSREQ to peer A5_23
+73682-[2025-10-23 14:34:55] Received from connection peer: A5_60: SENDMSG,A5_29,A5_60,Hello from A5_60 automated!
+73683-[2025-10-23 14:34:55] Stored message for group A5_29 from A5_60
+73684:[2025-10-23 14:34:55] Message is for us (A5_29) - stored and not forwarding
+73685-[2025-10-23 14:34:57] Received from connection peer: A5_60: STATUSREQ

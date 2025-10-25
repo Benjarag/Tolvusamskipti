@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <unordered_map>
 #include <atomic>
 #include <ctime>
 #include <iomanip>
@@ -22,6 +23,7 @@
 #include "networking.h"
 #include "protocol.h"
 #include <deque>
+#include <functional>
 
 class TSAMServer {
 private:
@@ -64,10 +66,12 @@ private:
         std::time_t timestamp;
     };
     std::map<std::string, std::deque<StoredMessage>> group_messages;
-    // Simple recent message deduplication: store recent message signatures to avoid
-    // forwarding loops or duplicate forwards. Key format: from|to|content
-    std::deque<std::string> recent_messages; // acts as a small FIFO cache
-    const size_t RECENT_MESSAGES_LIMIT = 256;
+    
+    // Canonical message deduplication using hash-based signatures with TTL
+    // Maps signature hash -> timestamp for O(1) lookup and automatic expiry
+    std::unordered_map<size_t, std::time_t> recent_message_hashes;
+    const int MESSAGE_TTL_SECONDS = 300; // 5 minutes TTL for dedup cache
+    
     // Counters to aggregate duplicate logs so we don't spam the log file and appear to loop
     std::map<std::string, int> duplicate_counts;
     std::map<std::string, std::chrono::steady_clock::time_point> duplicate_last_log;
@@ -203,6 +207,36 @@ private:
         size_t end = s.size() - 1;
         while (end > start && isspace((unsigned char)s[end])) --end;
         return s.substr(start, end - start + 1);
+    }
+    
+    // Create canonical signature for message deduplication
+    // Returns hash that ignores hop-list variations and normalizes whitespace
+    size_t canonicalSignature(const std::string& from_group, const std::string& to_group, const std::string& content) {
+        // Normalize content: collapse multiple spaces, trim whitespace
+        std::string normalized;
+        bool prev_space = false;
+        for (char c : content) {
+            if (isspace(static_cast<unsigned char>(c))) {
+                if (!prev_space && !normalized.empty()) {
+                    normalized += ' ';
+                    prev_space = true;
+                }
+            } else {
+                normalized += c;
+                prev_space = false;
+            }
+        }
+        
+        // Remove trailing space if any
+        if (!normalized.empty() && normalized.back() == ' ') {
+            normalized.pop_back();
+        }
+        
+        // Create canonical string: from|to|normalized_content
+        std::string canonical = from_group + "|" + to_group + "|" + normalized;
+        
+        // Hash it for O(1) lookup
+        return std::hash<std::string>{}(canonical);
     }
 
     // Normalize a peer/group name received from HELO or SERVERS: trim and remove stray commas/semicolons
@@ -616,8 +650,15 @@ private:
                 socklen_t llen = sizeof(local);
                 if (getsockname(sockfd, (sockaddr*)&local, &llen) == 0) {
                     char buf[INET_ADDRSTRLEN];
-                    inet_ntop(AF_INET, &local.sin_addr, buf, sizeof(buf));
-                    std::string host_ip = std::string(buf);
+                    
+                    // Prefer public IP from environment variable or hostname resolution
+                    std::string host_ip = Networking::advertised_ip();
+                    
+                    // Fallback to local IP from getsockname if advertised_ip returns empty
+                    if (host_ip.empty()) {
+                        inet_ntop(AF_INET, &local.sin_addr, buf, sizeof(buf));
+                        host_ip = std::string(buf);
+                    }
 
                     // Build SERVERS list: include ourselves first
                     std::string servers_reply = "SERVERS,";
@@ -776,23 +817,28 @@ private:
                 group_messages[to_group].push_back(sm);
                 log("Stored message from " + group_id + " for group " + to_group + ": " + message);
 
-                // Use deduplication cache to avoid duplicate forwards/loops.
-                // Use same signature format as peer SENDMSG handler for consistency.
-                std::string signature = group_id + "|" + to_group + "|" + message;
-
-                bool seen = false;
-                for (const auto &s : recent_messages) {
-                    if (s == signature) { 
-                        seen = true;
-                        break;
+                // Use canonical deduplication cache (same as peer handler for consistency)
+                size_t msg_hash = canonicalSignature(group_id, to_group, message);
+                std::time_t now = std::time(nullptr);
+                
+                // Clean up expired entries
+                std::vector<size_t> expired_hashes;
+                for (const auto& entry : recent_message_hashes) {
+                    if (now - entry.second > MESSAGE_TTL_SECONDS) {
+                        expired_hashes.push_back(entry.first);
                     }
                 }
+                for (size_t hash : expired_hashes) {
+                    recent_message_hashes.erase(hash);
+                }
+                
+                // Check if message is duplicate
+                auto it = recent_message_hashes.find(msg_hash);
+                bool seen = (it != recent_message_hashes.end());
+
                 if (!seen) {
-                    // Add to recent cache
-                    recent_messages.push_back(signature);
-                    if (recent_messages.size() > RECENT_MESSAGES_LIMIT) {
-                        recent_messages.pop_front();
-                    }
+                    // Add to cache with current timestamp
+                    recent_message_hashes[msg_hash] = now;
 
                     // ONLY forward if message is NOT for us
                     if (to_group != group_id) {
@@ -884,7 +930,7 @@ private:
                         log("Message is for us (" + group_id + ") - stored locally, not forwarding");
                     }
                 } else {
-                    log("Duplicate SENDMSG from client IGNORED (recent): " + signature);
+                    log("Duplicate SENDMSG from client IGNORED (canonical match, TTL active): " + group_id + "->" + to_group);
                 }
                 
                 return "MESSAGE_SENT";
@@ -894,8 +940,10 @@ private:
         else if (command == "LISTSERVERS") {
             std::string list = "SERVERS,";
             
-            // Include ourselves first
-            list += group_id + "," + "130.208.246.98" + "," + std::to_string(server_port) + ";";
+            // Include ourselves first with public IP
+            std::string ip = Networking::advertised_ip();
+            if (ip.empty()) ip = "130.208.246.98";  // Default TSAM server address for safe fallback
+            list += group_id + "," + ip + "," + std::to_string(server_port) + ";";
             
             // Keep track of which peer names we've already added to avoid duplicates
             std::set<std::string> seen_peers;
@@ -1005,13 +1053,17 @@ private:
 
                     // Determine the local IP address used on this connection and send it in the
                     // SERVERS reply so the peer knows how to reach us.
-                    sockaddr_in local;
-                    socklen_t llen = sizeof(local);
-                    std::string host_ip = "130.208.246.98";
-                    if (getsockname(sockfd, (sockaddr*)&local, &llen) == 0) {
-                        char buf[INET_ADDRSTRLEN];
-                        inet_ntop(AF_INET, &local.sin_addr, buf, sizeof(buf));
-                        host_ip = std::string(buf);
+                    std::string host_ip = Networking::advertised_ip();
+                    if (host_ip.empty()) {
+                        sockaddr_in local{};
+                        socklen_t llen = sizeof(local);
+                        if (getsockname(sockfd, (sockaddr*)&local, &llen) == 0) {
+                            char buf[INET_ADDRSTRLEN];
+                            inet_ntop(AF_INET, &local.sin_addr, buf, sizeof(buf));
+                            host_ip = buf;
+                        } else {
+                            host_ip = "127.0.0.1"; // final fallback
+                        }
                     }
                     std::string servers_reply = "SERVERS," + group_id + "," + host_ip + "," + std::to_string(server_port) + ";";
                     Networking::sendMessage(sockfd, servers_reply);
@@ -1095,30 +1147,28 @@ private:
             stored_msg.hops = hops;  // Store the received hops
             stored_msg.timestamp = std::time(nullptr);
             
-            // Deduplicate using recent_messages with improved signature
-            // Extract just the quote part (before any routing list) for better dedup
-            // Format: "quote text"AuthorA5_14,A5_27,... so find the last quote
-            std::string sig_base = message;
-            size_t last_quote = message.rfind('"');
-            if (last_quote != std::string::npos && last_quote < message.length() - 1) {
-                // Take everything up to ~50 chars after the closing quote (captures author name)
-                size_t end_pos = std::min(last_quote + 50, message.length());
-                sig_base = message.substr(0, end_pos);
-            } else if (sig_base.length() > 200) {
-                // Fallback: truncate long messages
-                sig_base = sig_base.substr(0, 200);
-            }
-            std::string signature = from_group + "|" + to_group + "|" + sig_base;
+            // Canonical deduplication using hash-based signature (ignores hop-list variations)
+            size_t msg_hash = canonicalSignature(from_group, to_group, message);
+            std::time_t now = std::time(nullptr);
             
-            bool seen = false;
-            for (const auto &s : recent_messages) {
-                if (s == signature) { seen = true; break; }
+            // Clean up expired entries (TTL-based expiry)
+            std::vector<size_t> expired_hashes;
+            for (const auto& entry : recent_message_hashes) {
+                if (now - entry.second > MESSAGE_TTL_SECONDS) {
+                    expired_hashes.push_back(entry.first);
+                }
             }
+            for (size_t hash : expired_hashes) {
+                recent_message_hashes.erase(hash);
+            }
+            
+            // Check if message is duplicate
+            auto it = recent_message_hashes.find(msg_hash);
+            bool seen = (it != recent_message_hashes.end());
             
             if (!seen) {
-                // Add to cache and store
-                recent_messages.push_back(signature);
-                if (recent_messages.size() > RECENT_MESSAGES_LIMIT) recent_messages.pop_front();
+                // Add to cache with current timestamp
+                recent_message_hashes[msg_hash] = now;
 
                 // Store message for the destination group (even if it's not us)
                 group_messages[to_group].push_back(stored_msg);
@@ -1226,13 +1276,14 @@ private:
                 }
             } else {
                 // Duplicate message - aggregate counts and rate-limit logging to avoid flood
-                auto now = std::chrono::steady_clock::now();
-                duplicate_counts[signature]++;
+                auto now_chrono = std::chrono::steady_clock::now();
+                std::string sig_key = std::to_string(msg_hash);
+                duplicate_counts[sig_key]++;
                 bool should_log = false;
-                if (duplicate_last_log.find(signature) == duplicate_last_log.end()) {
+                if (duplicate_last_log.find(sig_key) == duplicate_last_log.end()) {
                     should_log = true; // first duplicate occurrence, log it
                 } else {
-                    auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - duplicate_last_log[signature]).count();
+                    auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now_chrono - duplicate_last_log[sig_key]).count();
                     if (elapsed >= 10) { // log at most once every 10 seconds per signature
                         should_log = true;
                     }
@@ -1243,8 +1294,8 @@ private:
                     if (!hops.empty()) {
                         hop_info = " [hops: " + buildHopString(hops) + "]";
                     }
-                    log("Duplicate SENDMSG from peer IGNORED (recent): " + signature + hop_info + " (count=" + std::to_string(duplicate_counts[signature]) + ")");
-                    duplicate_last_log[signature] = now;
+                    log("Duplicate SENDMSG IGNORED (canonical match, TTL active): " + from_group + "->" + to_group + hop_info + " (count=" + std::to_string(duplicate_counts[sig_key]) + ")");
+                    duplicate_last_log[sig_key] = now_chrono;
                 }
 
                 return ""; // Duplicate message - ignore
